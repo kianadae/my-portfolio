@@ -89,8 +89,8 @@ function Cursor({ dark }: { dark: boolean }) {
   }, []);
   return (
     <>
-      <div ref={cursorRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, width: hovered ? '60px' : '40px', height: hovered ? '60px' : '40px', border: `1px solid ${dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)'}`, borderRadius: '50%', pointerEvents: 'none', transition: 'width 0.3s, height 0.3s, border-color 0.3s', mixBlendMode: 'difference' }} />
-      <div ref={dotRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, width: '6px', height: '6px', background: dark ? 'white' : '#080808', borderRadius: '50%', pointerEvents: 'none', mixBlendMode: 'difference' }} />
+      <div ref={cursorRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, width: hovered ? '60px' : '40px', height: hovered ? '60px' : '40px', border: `1px solid ${dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}`, borderRadius: '50%', pointerEvents: 'none', transition: 'width 0.3s, height 0.3s, border-color 0.4s' }} />
+      <div ref={dotRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, width: '6px', height: '6px', background: dark ? 'white' : '#080808', borderRadius: '50%', pointerEvents: 'none', transition: 'background 0.4s' }} />
     </>
   );
 }
