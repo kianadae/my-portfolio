@@ -210,7 +210,8 @@ export default function Home() {
           text-decoration: none; font-size: 0.7rem; letter-spacing: 0.25em;
           text-transform: uppercase; cursor: none; position: relative; transition: color 0.3s;
         }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; transition: width 0.3s; }
+        .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: currentColor; transition: width 0.3s ease; }
+        .nav-link:hover { text-decoration: none; }
         .nav-link:hover::after { width: 100%; }
 
         .work-card {
@@ -465,7 +466,7 @@ export default function Home() {
                 Let&apos;s<br /><span style={{ color: tk.connectDim, transition: `color ${dur}` }}>Connect</span>
               </div>
               <p style={{ color: tk.textDim, fontSize: '0.9rem', lineHeight: 1.8, maxWidth: '400px', marginBottom: '48px', transition: `color ${dur}` }}>
-                Open to internships, web development roles, and freelance projects. Let&apos;s build something great.
+                Open to web development roles and freelance projects. Let&apos;s build something great.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <MagneticLink href="mailto:mahusaycada98@gmail.com" dark={dark}>mahusaycada98@gmail.com</MagneticLink>
