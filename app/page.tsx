@@ -476,7 +476,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-              <img src="/logo.png" alt="Christian Ada" style={{ height: '44px', width: 'auto', filter: tk.logoFilter, opacity: 0.18, marginBottom: '24px', objectFit: 'contain', transition: `filter ${dur}, opacity ${dur}` }} />
+              <img src="/logo.png" alt="Christian Ada" style={{ height: '44px', width: 'auto', objectPosition: 'left', filter: tk.logoFilter, opacity: 0.18, marginBottom: '24px', objectFit: 'contain', transition: `filter ${dur}, opacity ${dur}` }} />
               <div style={{ color: tk.textFaint, fontSize: '0.72rem', letterSpacing: '0.2em', lineHeight: 2.2, fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>
                 <div>Christian Ada</div>
                 <div>Web Developer</div>
