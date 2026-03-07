@@ -408,7 +408,12 @@ export default function Home() {
               { num: '05', title: "ImgForge", sub: "Side Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://christian-ada.github.io/imgforge" },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.1 }}
-                className="work-card hoverable" style={{ border: `1px solid ${tk.border}` }}>
+                className="work-card hoverable" style={{ border: `1px solid ${tk.border}` }}
+                
+                onClick={() => item.url && window.open(item.url, '_blank')}
+                style={{ ..., cursor: item.url ? 'none' : 'default' }}
+                className="work-card hoverable"             
+                >
                 <div className="card-arrow" style={{ border: `1px solid ${tk.border}`, color: tk.text }}>↗</div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
                   <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.65rem', color: tk.textDimmer, letterSpacing: '0.2em', transition: `color ${dur}` }}>{item.num}</span>
