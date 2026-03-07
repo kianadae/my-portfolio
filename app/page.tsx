@@ -405,7 +405,7 @@ export default function Home() {
               { num: '02', title: "Maintenance & Support",    sub: "Ongoing",      desc: "Ongoing plugin updates, troubleshooting, UX improvements, and responsive cross-browser testing.", tag: "Freelance", url: "" },
               { num: '03', title: "Performance Optimisation", sub: "Specialist",   desc: "Improved load times up to 30% using caching strategies, image compression, and code minification.", tag: "Core Skill", url: "" },
               { num: '04', title: "UX & Responsive Design",   sub: "Mobile-first", desc: "Mobile-first design approach with cross-browser compatibility and accessibility improvements.", tag: "Design", url: "" },
-              { num: '05', title: "ImgForge",                 sub: "Side Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://christian-ada.github.io/imgforge" },
+              { num: '05', title: "ImgForge",                 sub: "Side Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://kianadae.github.io/imgforge/" },
             ].map((item, i) => (
               <motion.div
                 key={i}
