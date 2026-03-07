@@ -313,7 +313,7 @@ export default function Home() {
           {/* Top-right label — hide on mobile */}
           {!isMobile && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 1.8 }}
-              style={{ position: 'absolute', right: '64px', textAlign: 'right' }}>
+              style={{ position: 'absolute',top: '94px', right: '64px', textAlign: 'right' }}>
               <div style={{ color: tk.textDimmer, fontSize: '0.7rem', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '4px' }}>Based in</div>
               <div style={{ color: tk.textDim, fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Auckland, NZ</div>
             </motion.div>
