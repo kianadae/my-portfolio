@@ -401,12 +401,8 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '3px' }}>
             {[
-              { num: '01', title: "WordPress Development",    sub: "40+ sites",    desc: "Developed 40+ WordPress websites with CRM and payment integrations, optimised load time by up to 30%.", tag: "2020–Present", url: "" },
-              { num: '02', title: "Maintenance & Support",    sub: "Ongoing",      desc: "Ongoing plugin updates, troubleshooting, UX improvements, and responsive cross-browser testing.", tag: "Freelance", url: "" },
-              { num: '03', title: "Performance Optimisation", sub: "Specialist",   desc: "Improved load times up to 30% using caching strategies, image compression, and code minification.", tag: "Core Skill", url: "" },
-              { num: '04', title: "UX & Responsive Design",   sub: "Mobile-first", desc: "Mobile-first design approach with cross-browser compatibility and accessibility improvements.", tag: "Design", url: "" },
-              { num: '05', title: "ImgForge",                 sub: "Side Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://kianadae.github.io/imgforge/" },
-              { num: '06', title: "Mobile Mechanic", sub: "Sample Site", desc: "Landing page for a mobile mechanic service — diagnostics, repairs, maintenance and roadside assistance. Built for speed and local SEO.", tag: "2025", url: "https://christianada.page.gd/" },
+              { num: '01', title: "ImgForge", sub: "Sample Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://kianadae.github.io/imgforge/" },
+              { num: '02', title: "Mobile Mechanic", sub: "Sample Site", desc: "Landing page for a mobile mechanic service — diagnostics, repairs, maintenance and roadside assistance. Built for speed and local SEO.", tag: "2025", url: "https://christianada.page.gd/" },
             ].map((item, i) => (
               <motion.div
                 key={i}
