@@ -313,7 +313,7 @@ export default function Home() {
           {/* Top-right label — hide on mobile */}
           {!isMobile && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 1.8 }}
-              style={{ position: 'absolute', top: '120px', right: '64px', textAlign: 'right' }}>
+              style={{ position: 'absolute',top: '94px', right: '64px', textAlign: 'right' }}>
               <div style={{ color: tk.textDimmer, fontSize: '0.7rem', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '4px' }}>Based in</div>
               <div style={{ color: tk.textDim, fontSize: '0.7rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Auckland, NZ</div>
             </motion.div>
@@ -401,13 +401,26 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '3px' }}>
             {[
-              { num: '01', title: "WordPress Development",   sub: "40+ sites",    desc: "Developed 40+ WordPress websites with CRM and payment integrations, optimised load time by up to 30%.", tag: "2020–Present" },
-              { num: '02', title: "Maintenance & Support",   sub: "Ongoing",      desc: "Ongoing plugin updates, troubleshooting, UX improvements, and responsive cross-browser testing.", tag: "Freelance" },
-              { num: '03', title: "Performance Optimisation",sub: "Specialist",   desc: "Improved load times up to 30% using caching strategies, image compression, and code minification.", tag: "Core Skill" },
-              { num: '04', title: "UX & Responsive Design",  sub: "Mobile-first", desc: "Mobile-first design approach with cross-browser compatibility and accessibility improvements.", tag: "Design" },
+              { num: '01', title: "WordPress Development",    sub: "40+ sites",    desc: "Developed 40+ WordPress websites with CRM and payment integrations, optimised load time by up to 30%.", tag: "2020–Present", url: "" },
+              { num: '02', title: "Maintenance & Support",    sub: "Ongoing",      desc: "Ongoing plugin updates, troubleshooting, UX improvements, and responsive cross-browser testing.", tag: "Freelance", url: "" },
+              { num: '03', title: "Performance Optimisation", sub: "Specialist",   desc: "Improved load times up to 30% using caching strategies, image compression, and code minification.", tag: "Core Skill", url: "" },
+              { num: '04', title: "UX & Responsive Design",   sub: "Mobile-first", desc: "Mobile-first design approach with cross-browser compatibility and accessibility improvements.", tag: "Design", url: "" },
+              { num: '05', title: "ImgForge",                 sub: "Side Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://kianadae.github.io/imgforge/" },
+              { num: '06', title: "Mobile Mechanic", sub: "Sample Site", desc: "Landing page for a mobile mechanic service — diagnostics, repairs, maintenance and roadside assistance. Built for speed and local SEO.", tag: "2025", url: "https://christianada.page.gd/" },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.1 }}
-                className="work-card hoverable" style={{ border: `1px solid ${tk.border}` }}>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: i * 0.1 }}
+                className="work-card hoverable"
+                onClick={() => item.url && window.open(item.url, '_blank')}
+                style={{
+                  border: `1px solid ${tk.border}`,
+                  cursor: item.url ? 'pointer' : 'default',
+                }}
+              >
                 <div className="card-arrow" style={{ border: `1px solid ${tk.border}`, color: tk.text }}>↗</div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
                   <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.65rem', color: tk.textDimmer, letterSpacing: '0.2em', transition: `color ${dur}` }}>{item.num}</span>
