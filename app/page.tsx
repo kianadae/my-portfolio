@@ -149,7 +149,7 @@ function MobileMenu({ dark, open, onClose }: { dark: boolean; open: boolean; onC
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: 'fixed', inset: 0, zIndex: 500, background: tk2.bg, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '40px' }}
       onClick={onClose}>
-      {['About', 'Work', 'Skills', 'Contact'].map((item, i) => (
+      {['About', 'Work', 'Experience', 'Skills', 'Contact'].map((item, i) => (
         <motion.a key={item} href={`#${item.toLowerCase()}`}
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
           onClick={onClose}
@@ -233,16 +233,25 @@ export default function Home() {
         .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: currentColor; transition: width 0.3s ease; }
         .nav-link:hover::after { width: 100%; }
 
-        .work-card { position: relative; padding: 32px 28px; overflow: hidden; cursor: default; transition: border-color ${dur}, background ${dur}; }
-        @media (min-width: 768px) { .work-card { padding: 48px 40px; cursor: none; } }
-        .work-card .card-arrow { position: absolute; top: 28px; right: 28px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transform: rotate(-45deg) scale(0.8); transition: opacity 0.3s, transform 0.3s; }
-        @media (min-width: 768px) { .work-card .card-arrow { top: 40px; right: 40px; width: 32px; height: 32px; } }
-        .work-card:hover .card-arrow { opacity: 1; transform: rotate(0deg) scale(1); }
+        .work-card { position: relative; min-height: 132px; padding: 28px 20px; overflow: hidden; cursor: default; display: flex; align-items: flex-end; transition: border-color ${dur}, background ${dur}; }
+        @media (min-width: 768px) { .work-card { min-height: 176px; padding: 36px 22px; cursor: none; } }
+        .work-card:hover { background: ${dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}; }
+        .work-card .card-title { transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1); }
+        .work-card .card-logo { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 28px 24px; background: #ffffff; opacity: 0; transform: scale(0.94); transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1); pointer-events: none; }
+        .work-card .card-logo.plate-dark { background: #161616; }
+        .work-card .card-logo img { width: min(280px, 88%); height: 88px; object-fit: contain; }
+        .work-card.has-logo:hover .card-logo,
+        .work-card.has-logo:focus-visible .card-logo { opacity: 1; transform: scale(1); }
+        .work-card.has-logo:hover .card-title,
+        .work-card.has-logo:focus-visible .card-title { opacity: 0; }
 
         .showcase-panel { flex-shrink: 0; width: 88vw; height: 55vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px 28px; position: relative; overflow: hidden; transition: border-color ${dur}, background ${dur}; }
         @media (min-width: 768px) { .showcase-panel { width: 75vw; height: 65vh; padding: 60px 70px; } }
         .showcase-panel::before { content: attr(data-num); position: absolute; top: 20px; right: 20px; font-size: 5rem; font-weight: 900; line-height: 1; font-family: 'Bebas Neue', sans-serif; pointer-events: none; user-select: none; transition: color ${dur}; }
         @media (min-width: 768px) { .showcase-panel::before { top: 48px; right: 60px; font-size: 8rem; } }
+
+        .exp-row { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 28px 0; border-top: 1px solid ${tk.border}; transition: border-color ${dur}; }
+        @media (min-width: 768px) { .exp-row { grid-template-columns: 180px 1fr; gap: 32px; align-items: start; padding: 36px 0; } }
 
         .skill-pill { padding: 10px 18px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: default; position: relative; overflow: hidden; transition: color 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s; }
         @media (min-width: 768px) { .skill-pill { padding: 12px 24px; font-size: 0.78rem; cursor: none; } }
@@ -273,7 +282,7 @@ export default function Home() {
         {/* Desktop nav links */}
         {!isMobile && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
-            {['About', 'Work', 'Skills', 'Contact'].map((item) => (
+            {['About', 'Work', 'Experience', 'Skills', 'Contact'].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} className="nav-link" style={{ color: tk.textDimmer }}>{item}</a>
             ))}
           </motion.div>
@@ -322,7 +331,7 @@ export default function Home() {
           <div style={{ position: 'relative', zIndex: 10 }}>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}
               style={{ color: tk.textDimmer, fontSize: '0.7rem', letterSpacing: '0.35em', textTransform: 'uppercase', marginBottom: '24px', fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>
-              ✦ Web Developer {isMobile && '— Auckland, NZ'}
+              ✦ WordPress Developer {isMobile && '— Auckland, NZ'}
             </motion.div>
 
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", lineHeight: 0.88 }}>
@@ -338,11 +347,11 @@ export default function Home() {
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2 }}
               style={{ marginTop: '32px', display: 'flex', alignItems: 'center', gap: isMobile ? '16px' : '40px', flexWrap: 'wrap' }}>
-              <p style={{ color: tk.textDimmer, fontSize: '0.72rem', letterSpacing: '0.15em', maxWidth: '280px', lineHeight: 1.8, textTransform: 'uppercase', transition: `color ${dur}` }}>
-                WordPress · Performance · UX · Backend
+              <p style={{ color: tk.textDimmer, fontSize: '0.72rem', letterSpacing: '0.15em', maxWidth: '320px', lineHeight: 1.8, textTransform: 'uppercase', transition: `color ${dur}` }}>
+                WordPress · Integrations · QA · Performance
               </p>
               <div style={{ width: '1px', height: '32px', background: tk.border, transition: `background ${dur}` }} />
-              <p style={{ color: tk.textDimmer, fontSize: '0.72rem', fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>4+ yrs exp.</p>
+              <p style={{ color: tk.textDimmer, fontSize: '0.72rem', fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>5+ yrs exp.</p>
             </motion.div>
           </div>
 
@@ -359,10 +368,10 @@ export default function Home() {
         <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           style={{ borderTop: `1px solid ${tk.border}`, borderBottom: `1px solid ${tk.border}`, display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', transition: `border-color ${dur}` }}>
           {[
-            { value: 40,  suffix: '+', label: 'WP Sites Built' },
-            { value: 4,   suffix: '+', label: 'Years Experience' },
-            { value: 30,  suffix: '%', label: 'Load Improvement' },
-            { value: 100, suffix: '%', label: 'Satisfaction' },
+            { value: 40, suffix: '+', label: 'WordPress Sites' },
+            { value: 5,  suffix: '+', label: 'Years Experience' },
+            { value: 30, suffix: '%', label: 'Faster Load Times' },
+            { value: 8,  suffix: '',  label: 'Featured Brands' },
           ].map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               style={{ padding: isMobile ? '28px 24px' : '36px 64px', borderRight: (isMobile ? i % 2 !== 1 : i < 3) ? `1px solid ${tk.border}` : 'none', borderBottom: isMobile && i < 2 ? `1px solid ${tk.border}` : 'none', transition: `border-color ${dur}` }}>
@@ -381,10 +390,12 @@ export default function Home() {
             <div style={{ width: '32px', height: '1px', background: tk.border, transition: `background ${dur}` }} />
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 }}>
-            <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(1.3rem, 3vw, 2.6rem)', lineHeight: 1.4, color: tk.text, fontWeight: 400, transition: `color ${dur}` }}>
-              Detail-oriented Web Developer with 4+ years crafting WordPress experiences —{' '}
-              <em style={{ color: tk.textDim, transition: `color ${dur}` }}>focused on performance, responsiveness, and backend precision.</em>{' '}
-              Currently pursuing postgraduate studies in IT in New Zealand.
+            <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(1.3rem, 3vw, 2.4rem)', lineHeight: 1.4, color: tk.text, fontWeight: 400, transition: `color ${dur}` }}>
+              WordPress developer with 5+ years shipping sites from brief to launch —{' '}
+              <em style={{ color: tk.textDim, transition: `color ${dur}` }}>custom builds, CRM and payment integrations, and QA across devices.</em>
+            </p>
+            <p style={{ color: tk.textDim, fontSize: '0.95rem', lineHeight: 1.8, marginTop: '28px', maxWidth: '640px', transition: `color ${dur}` }}>
+              Currently Junior Website Developer at The Web Guys NZ in Parnell, after converting from an internship. Previously shipped 40+ WordPress sites at Sites at Scale, cutting load times by up to 30%. PGDip in Information Technology, Auckland Institute of Studies.
             </p>
           </motion.div>
         </section>
@@ -399,32 +410,95 @@ export default function Home() {
             <div style={{ color: tk.textDimmer, fontSize: '0.7rem', letterSpacing: '0.2em', transition: `color ${dur}` }}>2020 — Present</div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '3px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: '3px' }}>
             {[
-              { num: '01', title: "ImgForge", sub: "Sample Project", desc: "Browser-based image resizer — upload once, export to 20+ sizes with per-preset crop control. Zero uploads, runs entirely client-side.", tag: "2025", url: "https://kianadae.github.io/imgforge/" },
-              { num: '02', title: "Mobile Mechanic", sub: "Sample Site", desc: "Landing page for a mobile mechanic service — diagnostics, repairs, maintenance and roadside assistance. Built for speed and local SEO.", tag: "2025", url: "https://christianada.page.gd/" },
+              { title: "Prominent", logo: "/projects/prominent.png" },
+              { title: "Lucky 13 Fitness", logo: "/projects/lucky13-fitness.png" },
+              { title: "Brancourts", logo: "/projects/brancourts.png" },
+              { title: "RMA Sport", logo: "/projects/rma-sport.png" },
+              { title: "Blue Diamond Machinery", logo: "/projects/solutions-blue-diamond.webp", plate: "dark" },
+              { title: "Clinical Assessor", logo: "/projects/clinical-assessor.png" },
+              { title: "Team Kids", logo: "/projects/team-kids.png" },
+              { title: "Dek Designs", logo: "/projects/dek-designs.png" },
             ].map((item, i) => (
               <motion.div
-                key={i}
+                key={item.title}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: i * 0.1 }}
-                className="work-card hoverable"
-                onClick={() => item.url && window.open(item.url, '_blank')}
-                style={{
-                  border: `1px solid ${tk.border}`,
-                  cursor: item.url ? 'pointer' : 'default',
-                }}
+                transition={{ duration: 0.7, delay: Math.min(i * 0.06, 0.36) }}
+                className={`work-card hoverable${item.logo ? " has-logo" : ""}`}
+                style={{ border: `1px solid ${tk.border}` }}
               >
-                <div className="card-arrow" style={{ border: `1px solid ${tk.border}`, color: tk.text }}>↗</div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.65rem', color: tk.textDimmer, letterSpacing: '0.2em', transition: `color ${dur}` }}>{item.num}</span>
-                  <span style={{ color: tk.textDimmer, fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', transition: `color ${dur}` }}>{item.tag}</span>
-                </div>
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1, letterSpacing: '0.02em', marginBottom: '6px', color: tk.text, transition: `color ${dur}` }}>{item.title}</div>
-                <div style={{ color: tk.textDimmer, fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '16px', transition: `color ${dur}` }}>{item.sub}</div>
-                <p style={{ color: tk.textDim, fontSize: '0.85rem', lineHeight: 1.7, transition: `color ${dur}` }}>{item.desc}</p>
+                <div className="card-title" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(1.25rem, 1.7vw, 2.15rem)', lineHeight: 0.95, letterSpacing: '0.02em', color: tk.text, transition: `color ${dur}` }}>{item.title}</div>
+                {item.logo ? (
+                  <div className={`card-logo${"plate" in item && item.plate === "dark" ? " plate-dark" : ""}`} aria-hidden="true">
+                    <img src={item.logo} alt="" />
+                  </div>
+                ) : null}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── EXPERIENCE ── */}
+        <section id="experience" style={{ padding: `${py} ${px}`, borderTop: `1px solid ${tk.border}`, transition: `border-color ${dur}` }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', gap: isMobile ? '24px' : '64px', marginBottom: isMobile ? '32px' : '48px' }}>
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <div style={{ color: tk.textDimmer, fontSize: '0.7rem', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '12px', transition: `color ${dur}` }}>Career</div>
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(2.5rem, 7vw, 6rem)', lineHeight: 0.9, color: tk.text, transition: `color ${dur}` }}>Experience</div>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+              style={{ color: tk.textDim, fontSize: '0.875rem', lineHeight: 1.8, display: 'flex', alignItems: isMobile ? 'flex-start' : 'flex-end', transition: `color ${dur}` }}>
+              From shipping 40+ WordPress sites in production to joining a Parnell agency full-time after an internship.
+            </motion.p>
+          </div>
+
+          {[
+            {
+              dates: "May 2026 — Present",
+              company: "The Web Guys NZ",
+              place: "Parnell, Auckland",
+              role: "Junior Website Developer",
+              note: "Hired from internship. WordPress builds, custom functionality, third-party integrations, and cross-browser QA before launch.",
+            },
+            {
+              dates: "Oct 2025 — Feb 2026",
+              company: "Revibe Digital",
+              place: "Taupo · Remote",
+              role: "Contract Website Developer",
+              note: "Part-time WordPress customisation for client sites, focused on responsiveness and performance.",
+            },
+            {
+              dates: "Jul 2021 — Apr 2025",
+              company: "Sites at Scale",
+              place: "Dumaguete, Philippines",
+              role: "Website Technician / Developer",
+              note: "Built and maintained 40+ WordPress sites. Integrated CRM tools, payment gateways and plugins. Cut load times by up to 30% with caching, image optimisation and minification.",
+            },
+          ].map((job, i) => (
+            <motion.div key={job.company} className="exp-row" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              style={{ borderBottom: i === 2 ? `1px solid ${tk.border}` : undefined }}>
+              <div style={{ color: tk.textDimmer, fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'DM Mono', monospace", paddingTop: '6px', transition: `color ${dur}` }}>{job.dates}</div>
+              <div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(1.5rem, 2.4vw, 2.1rem)', lineHeight: 1, letterSpacing: '0.02em', color: tk.text, marginBottom: '8px', transition: `color ${dur}` }}>{job.company}</div>
+                <div style={{ color: tk.textDimmer, fontSize: '0.68rem', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: '10px', transition: `color ${dur}` }}>{job.role} · {job.place}</div>
+                <p style={{ color: tk.textDim, fontSize: '0.88rem', lineHeight: 1.7, maxWidth: '560px', transition: `color ${dur}` }}>{job.note}</p>
+              </div>
+            </motion.div>
+          ))}
+
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '24px' : '48px', marginTop: isMobile ? '48px' : '72px' }}>
+            {[
+              { school: "Auckland Institute of Studies", cred: "Postgraduate Diploma in Information Technology", when: "2025 — 2026 · Auckland" },
+              { school: "Foundation University", cred: "Bachelor of Science in Information Technology", when: "2015 — 2020 · Dumaguete" },
+            ].map((ed) => (
+              <motion.div key={ed.school} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                style={{ borderTop: `1px solid ${tk.border}`, paddingTop: '24px', transition: `border-color ${dur}` }}>
+                <div style={{ color: tk.textDimmer, fontSize: '0.65rem', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '10px', transition: `color ${dur}` }}>Education</div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(1.3rem, 2vw, 1.8rem)', lineHeight: 1.05, color: tk.text, marginBottom: '8px', transition: `color ${dur}` }}>{ed.school}</div>
+                <div style={{ color: tk.textDim, fontSize: '0.85rem', lineHeight: 1.6, transition: `color ${dur}` }}>{ed.cred}</div>
+                <div style={{ color: tk.textDimmer, fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: '8px', fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>{ed.when}</div>
               </motion.div>
             ))}
           </div>
@@ -434,9 +508,9 @@ export default function Home() {
         <div ref={horizontalRef} style={{ overflowX: 'auto', overflowY: 'hidden', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', borderTop: `1px solid ${tk.border}`, transition: `border-color ${dur}` }}>
           <div style={{ display: 'flex' }}>
             {[
-              { title: "WordPress Projects",       text: "40+ websites built with CRM & payment integration.", year: "2020" },
-              { title: "Performance Optimisation", text: "Improved load times up to 30% with caching and code minification.", year: "2022" },
-              { title: "UX & Responsive Design",   text: "Cross-browser testing and mobile-first UX improvements.", year: "2023" },
+              { title: "Delivery at Scale",        text: "40+ WordPress websites for different businesses — CRM tools, payment gateways and third-party plugins included.", year: "2021" },
+              { title: "Performance Work",         text: "Cut load times by up to 30% with image optimisation, caching and code minification.", year: "2023" },
+              { title: "Hired in Auckland",        text: "Converted from internship to Junior Website Developer at The Web Guys NZ, Parnell.", year: "2026" },
             ].map((s, i) => (
               <div key={i} className="showcase-panel" data-num={`0${i+1}`}
                 style={{ borderRight: `1px solid ${tk.border}`, background: tk.bg, color: `${tk.ghostText}` }}>
@@ -467,12 +541,12 @@ export default function Home() {
             </motion.div>
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'flex-end' }}>
               <p style={{ color: tk.textDim, fontSize: '0.875rem', lineHeight: 1.8, transition: `color ${dur}` }}>
-                A toolkit built over 4+ years of professional web development, continuously evolving with the industry.
+                The stack I use daily to ship WordPress sites, plus the front-end tools behind this portfolio.
               </p>
             </motion.div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {["WordPress","PHP","JavaScript","TypeScript","React","Next.js","Tailwind CSS","MySQL","WooCommerce","Git","Performance","UX Design","Elementor","ACF","REST API","Figma"].map((skill, i) => (
+            {["WordPress","PHP","HTML","CSS","JavaScript","WooCommerce","Elementor","ACF","MySQL","Git","QA Testing","Caching","CRM Integrations","Payment Gateways","Figma","Photoshop","React","Next.js","TypeScript"].map((skill, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.85 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.04 }}
                 className="skill-pill hoverable" style={{ border: `1px solid ${tk.border}`, color: tk.textDim }}>
                 <style>{`.skill-pill:hover { color: ${tk.skillHoverText} !important; border-color: ${tk.text} !important; } .skill-pill::before { background: ${tk.skillHoverBg}; }`}</style>
@@ -490,13 +564,15 @@ export default function Home() {
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(3rem, 10vw, 10rem)', lineHeight: 0.88, letterSpacing: '-0.01em', marginBottom: '32px', color: tk.text, transition: `color ${dur}` }}>
                 Let&apos;s<br /><span style={{ color: tk.connectDim, transition: `color ${dur}` }}>Connect</span>
               </div>
-              <p style={{ color: tk.textDim, fontSize: '0.9rem', lineHeight: 1.8, maxWidth: '400px', marginBottom: '40px', transition: `color ${dur}` }}>
-                Open to web development roles and freelance projects. Let&apos;s build something great.
+              <p style={{ color: tk.textDim, fontSize: '0.9rem', lineHeight: 1.8, maxWidth: '440px', marginBottom: '40px', transition: `color ${dur}` }}>
+                Open to WordPress and web development roles in Auckland, and to freelance builds. Happy to talk about how I can help your team.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <MagneticLink href="mailto:mahusaycada98@gmail.com" dark={dark}>mahusaycada98@gmail.com</MagneticLink>
+                <MagneticLink href="tel:+64278907055" dark={dark}>+64 27 890 7055</MagneticLink>
                 <MagneticLink href="https://www.linkedin.com/in/christian-ada/" target="_blank" dark={dark}>LinkedIn — christian-ada</MagneticLink>
                 <MagneticLink href="https://www.behance.net/christian-ada" target="_blank" dark={dark}>Behance — christian-ada</MagneticLink>
+                <MagneticLink href="/christian-ada-cv.pdf" target="_blank" dark={dark}>Download CV</MagneticLink>
               </div>
             </motion.div>
 
@@ -505,8 +581,8 @@ export default function Home() {
               <img src="/logo.png" alt="Christian Ada" style={{ height: '40px', width: 'auto', filter: tk.logoFilter, opacity: 0.18, marginBottom: '20px', objectFit: 'contain', objectPosition: 'left', transition: `filter ${dur}, opacity ${dur}` }} />
               <div style={{ color: tk.textFaint, fontSize: '0.72rem', letterSpacing: '0.2em', lineHeight: 2.2, fontFamily: "'DM Mono', monospace", transition: `color ${dur}` }}>
                 <div>Christian Ada</div>
-                <div>Web Developer</div>
-                <div>Auckland, New Zealand</div>
+                <div>WordPress Developer</div>
+                <div>Sandringham, Auckland</div>
                 <div style={{ marginTop: '12px' }}>© 2026</div>
                 <div>All rights reserved</div>
               </div>
