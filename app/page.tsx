@@ -416,7 +416,7 @@ export default function Home() {
               { title: "Lucky 13 Fitness", logo: "/projects/lucky13-fitness.png" },
               { title: "Brancourts", logo: "/projects/brancourts.png" },
               { title: "RMA Sport", logo: "/projects/rma-sport.png" },
-              { title: "Blue Diamond Machinery", logo: "/projects/solutions-blue-diamond.webp", plate: "dark" },
+              { title: "Blue Diamond Solutions", logo: "/projects/solutions-blue-diamond.webp", plate: "dark" },
               { title: "Clinical Assessor", logo: "/projects/clinical-assessor.png" },
               { title: "Team Kids", logo: "/projects/team-kids.png" },
               { title: "Dek Designs", logo: "/projects/dek-designs.png" },
