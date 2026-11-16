@@ -563,8 +563,12 @@ button.work-orbit-card {
 .lab-index a:focus-visible,
 .lab-index a.is-active {
   opacity: 1;
-  background: var(--page-fg);
-  color: var(--page-bg);
+  background: color-mix(in srgb, var(--page-fg) 12%, transparent);
+  color: var(--page-fg);
+}
+
+.lab-index a.is-active {
+  border-color: var(--page-fg);
 }
 
 .lab-stage {
@@ -591,14 +595,19 @@ button.work-orbit-card {
 }
 
 .play-card {
-  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.play-card-num,
+.play-card-note {
+  color: color-mix(in srgb, currentColor 38%, transparent);
 }
 
 .play-card:hover,
 .play-card:focus-visible {
-  background: var(--page-fg);
-  color: var(--page-bg);
-  border-color: var(--page-fg);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border-color: currentColor;
+  transform: translateY(-3px);
 }
 
 .lens-stage {
