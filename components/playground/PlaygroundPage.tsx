@@ -20,17 +20,23 @@ const labs = [
   { id: "lens", kicker: "05", title: "Lens", note: "A cursor spotlight that inverts whatever sits underneath. Move around the type." },
 ] as const;
 
+type LabId = (typeof labs)[number]["id"];
+
+function isLabId(id: string): id is LabId {
+  return labs.some((lab) => lab.id === id);
+}
+
 export default function PlaygroundPage() {
   const { tk } = useTheme();
   const { scrollTo } = useMotion();
   const isMobile = useIsMobile();
   const px = isMobile ? "24px" : "64px";
-  const [active, setActive] = useState(labs[0].id);
+  const [active, setActive] = useState<LabId>(labs[0].id);
 
   useEffect(() => {
     const jump = (immediate = false) => {
       const id = window.location.hash.slice(1);
-      if (!id) return;
+      if (!isLabId(id)) return;
       scrollTo(`#${id}`, { immediate });
       setActive(id);
     };
@@ -44,7 +50,7 @@ export default function PlaygroundPage() {
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting && isLabId(entry.target.id)) setActive(entry.target.id);
         });
       },
       { rootMargin: "-40% 0px -45% 0px", threshold: 0.01 },
