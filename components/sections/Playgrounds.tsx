@@ -56,13 +56,13 @@ export default function Playgrounds({
               color: tk.text,
             }}
           >
-            <div className="mono" style={{ color: tk.textFaint, fontSize: "0.62rem", letterSpacing: "0.2em", marginBottom: 12 }}>
+            <div className="mono play-card-num" style={{ fontSize: "0.62rem", letterSpacing: "0.2em", marginBottom: 12 }}>
               {item.num}
             </div>
             <div className="display" style={{ fontSize: "clamp(1.3rem, 2vw, 1.9rem)", lineHeight: 1, marginBottom: 8 }}>
               {item.title}
             </div>
-            <div style={{ color: tk.textDimmer, fontSize: "0.75rem", lineHeight: 1.5 }}>{item.note}</div>
+            <div className="play-card-note" style={{ fontSize: "0.75rem", lineHeight: 1.5 }}>{item.note}</div>
           </Link>
         ))}
       </div>
