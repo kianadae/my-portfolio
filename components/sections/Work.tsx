@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import gsap from "gsap";
 import { projects } from "@/lib/content";
 import { motionConfig } from "@/lib/motion";
@@ -9,11 +9,13 @@ import type { Theme } from "@/lib/theme";
 import useIsMobile from "@/hooks/useIsMobile";
 import LogoPlate from "@/components/LogoPlate";
 
+const COUNT = projects.length;
+
 export default function Work({ tk, px }: { tk: Theme; px: string }) {
   const isMobile = useIsMobile();
   const { enabled } = useMotion();
   const pinRef = useRef<HTMLDivElement>(null);
-  const frameInner = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const preview = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
@@ -22,44 +24,43 @@ export default function Work({ tk, px }: { tk: Theme; px: string }) {
   const shown = hover ?? (isMobile ? open : active);
   const previewIndex = hover ?? 0;
 
+  const cardW = isMobile ? motionConfig.orbit.mobileCardWidth : motionConfig.orbit.cardWidth;
+  const cardH = isMobile ? motionConfig.orbit.mobileCardHeight : motionConfig.orbit.cardHeight;
+  const radius = useMemo(
+    () => Math.round((cardW / 2 / Math.tan(Math.PI / COUNT)) * motionConfig.orbit.spread),
+    [cardW],
+  );
+
   useEffect(() => {
     const pin = pinRef.current;
-    const inner = frameInner.current;
-    if (!pin || !inner) return;
-    if (!enabled || isMobile) {
-      gsap.set(inner, { yPercent: 0 });
+    const ring = ringRef.current;
+    if (!pin || !ring) return;
+
+    if (!enabled) {
+      gsap.set(ring, { rotateY: 0 });
       return;
     }
+
+    const step = 360 / COUNT;
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        inner,
-        { yPercent: 0 },
+        ring,
+        { rotateY: 0 },
         {
-          yPercent: -((projects.length - 1) / projects.length) * 100,
+          rotateY: -step * (COUNT - 1),
           ease: "none",
           scrollTrigger: {
             trigger: pin,
-            start: "top 88px",
-            end: motionConfig.pin.work,
-            pin: true,
+            start: isMobile ? "top 70%" : "top 88px",
+            end: isMobile ? "bottom top" : motionConfig.pin.work,
+            pin: !isMobile,
             scrub: 0.6,
             anticipatePin: 1,
             onUpdate: (self) => {
-              const i = Math.min(projects.length - 1, Math.floor(self.progress * projects.length + 0.001));
+              const i = Math.min(COUNT - 1, Math.floor(self.progress * COUNT + 0.001));
               setActive(i);
             },
           },
-        },
-      );
-      gsap.fromTo(
-        pin.querySelector(".browser-frame"),
-        { clipPath: "inset(8% 8% 8% 8%)", scale: motionConfig.imageFromScale },
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          scale: 1,
-          duration: motionConfig.duration.slow,
-          ease: motionConfig.ease.expo,
-          scrollTrigger: { trigger: pin, start: "top 80%", once: true },
         },
       );
     }, pin);
@@ -90,6 +91,8 @@ export default function Work({ tk, px }: { tk: Theme; px: string }) {
     mouse.current = { x: e.clientX + 28, y: e.clientY - 80 };
   };
 
+  const step = 360 / COUNT;
+
   return (
     <section id="work" style={{ padding: `80px ${px} 40px` }}>
       <div
@@ -116,9 +119,9 @@ export default function Work({ tk, px }: { tk: Theme; px: string }) {
       <div
         ref={pinRef}
         className="work-stage"
-        style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 32 : 64, alignItems: "start" }}
+        style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 24 : 64, alignItems: "center" }}
       >
-        <ol style={{ listStyle: "none", margin: 0, padding: 0 }} onMouseMove={onMove}>
+        <ol style={{ listStyle: "none", margin: 0, padding: 0, order: isMobile ? 2 : 0 }} onMouseMove={onMove}>
           {projects.map((item, i) => {
             const isOn = shown === i;
             return (
@@ -165,43 +168,55 @@ export default function Work({ tk, px }: { tk: Theme; px: string }) {
           })}
         </ol>
 
-        {!isMobile ? (
-          <div>
+        <div
+          style={{
+            order: isMobile ? 1 : 0,
+            position: isMobile ? "sticky" : "relative",
+            top: isMobile ? 72 : undefined,
+            zIndex: 2,
+            background: isMobile ? "var(--page-bg)" : "transparent",
+            paddingBottom: isMobile ? 8 : 0,
+          }}
+        >
+          <div
+            className="work-orbit"
+            style={{ ["--orbit-tilt" as string]: `${motionConfig.orbit.tiltX}deg` }}
+            aria-hidden="true"
+          >
             <div
-              className="browser-frame"
-              style={{
-                border: `1px solid ${tk.border}`,
-                borderRadius: 12,
-                overflow: "hidden",
-                background: tk.bgAlt,
-                transformOrigin: "center top",
-              }}
+              className="work-orbit-scene"
+              style={{ width: cardW, height: cardH }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderBottom: `1px solid ${tk.border}` }}>
-                <span className="dot" /><span className="dot" /><span className="dot" />
-                <span className="mono" style={{ marginLeft: 8, fontSize: "0.62rem", letterSpacing: "0.12em", color: tk.textDimmer }}>
-                  {String(active + 1).padStart(2, "0")} / {projects[active].title}
-                </span>
-              </div>
-              <div style={{ height: 340, overflow: "hidden", position: "relative" }}>
-                <div ref={frameInner} style={{ height: `${projects.length * 100}%` }}>
-                  {projects.map((item) => (
-                    <LogoPlate
+              <div ref={ringRef} className="work-orbit-ring">
+                {projects.map((item, i) => {
+                  const isFront = (hover ?? active) === i;
+                  return (
+                    <div
                       key={item.title}
-                      src={item.logo}
-                      plate={item.plate}
-                      sizes="40vw"
-                      style={{ height: `${100 / projects.length}%` }}
-                    />
-                  ))}
-                </div>
+                      className={`work-orbit-card${isFront ? " is-front" : ""}`}
+                      style={{
+                        transform: `rotateY(${step * i}deg) translateZ(${radius}px)`,
+                        border: `1px solid ${tk.border}`,
+                      }}
+                    >
+                      <LogoPlate
+                        src={item.logo}
+                        plate={item.plate}
+                        sizes="280px"
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            <p className="mono" style={{ marginTop: 16, color: tk.textDimmer, fontSize: "0.68rem", letterSpacing: "0.16em" }}>
+          </div>
+          {!isMobile ? (
+            <p className="mono" style={{ marginTop: 16, color: tk.textDimmer, fontSize: "0.68rem", letterSpacing: "0.16em", textAlign: "center" }}>
               {String(active + 1).padStart(2, "0")} — {projects[active].title}
             </p>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
 
       {!isMobile ? (

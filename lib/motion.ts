@@ -42,6 +42,16 @@ export const motionConfig = {
   },
 
   marqueeSeconds: 28,
+
+  /** 3D work-orbit rotator. */
+  orbit: {
+    cardWidth: 280,
+    cardHeight: 176,
+    tiltX: -12,
+    spread: 0.82,
+    mobileCardWidth: 220,
+    mobileCardHeight: 140,
+  },
 } as const;
 
 export const STORAGE_KEY = "ca-motion";

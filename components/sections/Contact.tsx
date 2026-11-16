@@ -6,9 +6,8 @@ import SplitText from "@/components/motion/SplitText";
 import FadeIn from "@/components/motion/FadeIn";
 import MagneticLink from "@/components/MagneticLink";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { BEHANCE, CV, EMAIL, LINKEDIN, PHONE, PHONE_LABEL } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
-
-const EMAIL = "mahusaycada98@gmail.com";
 
 export default function Contact({
   tk,
@@ -84,14 +83,14 @@ export default function Contact({
             >
               Copy email
             </button>
-            <MagneticLink href="tel:+64278907055" dark={dark}>+64 27 890 7055</MagneticLink>
-            <MagneticLink href="https://www.linkedin.com/in/christian-ada/" target="_blank" dark={dark}>
+            <MagneticLink href={`tel:${PHONE}`} dark={dark}>{PHONE_LABEL}</MagneticLink>
+            <MagneticLink href={LINKEDIN} target="_blank" dark={dark}>
               LinkedIn — christian-ada
             </MagneticLink>
-            <MagneticLink href="https://www.behance.net/christian-ada" target="_blank" dark={dark}>
+            <MagneticLink href={BEHANCE} target="_blank" dark={dark}>
               Behance — christian-ada
             </MagneticLink>
-            <MagneticLink href="/christian-ada-cv.pdf" target="_blank" dark={dark}>
+            <MagneticLink href={CV} target="_blank" dark={dark}>
               Download CV
             </MagneticLink>
           </div>

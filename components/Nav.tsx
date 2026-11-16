@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { navItems } from "@/lib/content";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { CV, EMAIL, navItems } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useMotion } from "@/components/motion/MotionProvider";
@@ -19,13 +21,17 @@ export default function Nav({
   isMobile: boolean
 }) {
   const { enabled, toggle, scrollTo } = useMotion();
+  const pathname = usePathname();
+  const router = useRouter();
+  const atHome = pathname === "/";
+  const atPlay = pathname.startsWith("/playground");
   const [active, setActive] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   const dur = "0.45s";
 
   useEffect(() => {
-    const ids = navItems.map((n) => n.toLowerCase());
+    const ids = [...navItems.map((n) => n.toLowerCase()), "play", "services", "faq"];
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -61,7 +67,17 @@ export default function Nav({
 
   const go = (id: string) => {
     setMenuOpen(false);
-    scrollTo(`#${id}`);
+    if (atHome) {
+      scrollTo(`#${id}`);
+      return;
+    }
+    router.push(`/#${id}`);
+  };
+
+  const goHome = () => {
+    setMenuOpen(false);
+    if (atHome) scrollTo(0);
+    else router.push("/");
   };
 
   return (
@@ -87,7 +103,7 @@ export default function Nav({
       >
         <button
           type="button"
-          onClick={() => scrollTo(0)}
+          onClick={goHome}
           aria-label="Back to top"
           style={{ background: "none", border: "none", padding: 0, display: "flex" }}
         >
@@ -117,12 +133,22 @@ export default function Nav({
                 </button>
               );
             })}
+            <Link
+              href="/playground"
+              className={`nav-link${atPlay ? " is-active" : ""}`}
+              style={{ color: atPlay ? tk.text : tk.textDimmer }}
+            >
+              Play
+            </Link>
           </div>
         )}
 
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           {!isMobile && (
             <>
+              <a className="nav-link hoverable" href={`mailto:${EMAIL}`} style={{ color: tk.text }}>
+                Email
+              </a>
               <button
                 type="button"
                 className="nav-link hoverable"
@@ -189,6 +215,30 @@ export default function Nav({
               {item}
             </button>
           ))}
+          <Link
+            href="/playground"
+            onClick={() => setMenuOpen(false)}
+            className="display"
+            style={{ fontSize: "3.5rem", color: atPlay ? tk.text : tk.textDim, textDecoration: "none", letterSpacing: "0.05em" }}
+          >
+            Play
+          </Link>
+          <a
+            href={`mailto:${EMAIL}`}
+            className="display"
+            style={{ fontSize: "2rem", color: tk.text, textDecoration: "none", letterSpacing: "0.05em" }}
+          >
+            Email
+          </a>
+          <a
+            href={CV}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+            style={{ color: tk.textDim }}
+          >
+            Download CV
+          </a>
           <button
             type="button"
             className="nav-link"

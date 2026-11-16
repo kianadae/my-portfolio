@@ -58,3 +58,58 @@ export const skillGroups = {
 };
 
 export const navItems = ["About", "Work", "Experience", "Skills", "Contact"] as const;
+
+export const EMAIL = "mahusaycada98@gmail.com";
+export const PHONE = "+64278907055";
+export const PHONE_LABEL = "+64 27 890 7055";
+export const LINKEDIN = "https://www.linkedin.com/in/christian-ada/";
+export const BEHANCE = "https://www.behance.net/christian-ada";
+export const CV = "/christian-ada-cv.pdf";
+
+export const services = [
+  {
+    num: "01",
+    title: "WordPress builds",
+    text: "Custom sites from brief to launch — the same work behind 40+ live websites for different businesses.",
+  },
+  {
+    num: "02",
+    title: "Integrations",
+    text: "CRM tools, payment gateways, and third-party plugins wired in so the site actually runs the business.",
+  },
+  {
+    num: "03",
+    title: "Performance",
+    text: "Caching, image optimisation and minification. Load times cut by up to 30% on production sites.",
+  },
+  {
+    num: "04",
+    title: "QA before launch",
+    text: "Cross-browser and device checks so what you approve is what ships — the same process used at The Web Guys NZ.",
+  },
+];
+
+export const processSteps = [
+  { num: "01", title: "Brief", text: "We map the business, pages, and integrations before a line of theme code." },
+  { num: "02", title: "Build", text: "WordPress, custom functionality, CRM and payments, then performance work." },
+  { num: "03", title: "Launch", text: "QA across browsers and devices, then handoff. Hired from internship on this loop." },
+];
+
+export const faqs = [
+  {
+    q: "Are you open to roles in Auckland?",
+    a: "Yes. Open to WordPress and web development roles in Auckland, currently Junior Website Developer at The Web Guys NZ in Parnell.",
+  },
+  {
+    q: "Do you take freelance builds?",
+    a: "Yes. Happy to talk about freelance WordPress and web builds for small businesses, alongside full-time roles.",
+  },
+  {
+    q: "What do you actually ship?",
+    a: "WordPress sites with custom functionality, CRM and payment integrations, caching and image optimisation, and QA before launch. 40+ sites shipped; load times cut by up to 30%.",
+  },
+  {
+    q: "Where are you based?",
+    a: "Sandringham, Auckland. NZ time. Phone and email are on this page — CV is a one-click download.",
+  },
+];

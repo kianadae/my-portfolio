@@ -7,6 +7,7 @@ import FadeIn from "@/components/motion/FadeIn";
 import AucklandClock from "@/components/AucklandClock";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { motionConfig } from "@/lib/motion";
+import { CV, EMAIL } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
 
 export default function Hero({
@@ -54,21 +55,21 @@ export default function Hero({
     <section
       id="hero"
       ref={hero}
+      className="hero"
       style={{
         position: "relative",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-end",
-        minHeight: "100vh",
-        padding: isMobile ? "0 24px 80px" : "0 64px 128px",
-        overflow: "hidden",
+        minHeight: "100svh",
+        padding: isMobile ? "112px 24px 72px" : "132px 64px 96px",
+        overflowX: "hidden",
       }}
     >
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", overflow: "hidden" }}>
         <div
-          className="display"
+          className="display hero-ghost"
           style={{
-            fontSize: "clamp(10rem, 40vw, 52rem)",
             lineHeight: 1,
             color: tk.ghostText,
             letterSpacing: "-0.05em",
@@ -97,22 +98,22 @@ export default function Hero({
           </div>
         </FadeIn>
 
-        <div ref={name} className="display" style={{ lineHeight: 0.88, transformOrigin: "left center" }}>
+        <div ref={name} className="display" style={{ lineHeight: 0.9, transformOrigin: "left center" }}>
           <h1 className="display" style={{ margin: 0, fontWeight: 400 }}>
             <SplitText
               text="CHRISTIAN"
               mode="chars"
               as="span"
-              className="display"
-              style={{ display: "block", fontSize: "clamp(4rem, 18vw, 18rem)", letterSpacing: "-0.02em", color: tk.text }}
+              className="display hero-name"
+              style={{ color: tk.text }}
             />
             <SplitText
               text="ADA"
               mode="chars"
               as="span"
               delay={0.18}
-              className="display"
-              style={{ display: "block", fontSize: "clamp(4rem, 18vw, 18rem)", letterSpacing: "-0.02em", color: tk.textDimmer }}
+              className="display hero-name"
+              style={{ color: tk.textDimmer }}
             />
           </h1>
         </div>
@@ -128,6 +129,33 @@ export default function Hero({
               <AucklandClock color={tk.textDimmer} />
             </div>
           ) : null}
+        </div>
+
+        <div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
+          <span
+            className="mono"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              color: tk.textDim,
+              fontSize: "0.62rem",
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              marginRight: 8,
+            }}
+          >
+            <span className="status-dot" aria-hidden="true" />
+            Open to Auckland roles · freelance
+          </span>
+        </div>
+        <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <a className="btn btn-primary hoverable" href={`mailto:${EMAIL}`}>
+            Email me
+          </a>
+          <a className="btn btn-ghost hoverable" href={CV} target="_blank" rel="noopener noreferrer">
+            Download CV
+          </a>
         </div>
       </div>
 
