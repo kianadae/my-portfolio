@@ -8,13 +8,12 @@ export default function MagneticLink({
   href,
   children,
   target,
-  dark,
   arrow,
 }: {
   href: string
   children: ReactNode
   target?: string
-  dark: boolean
+  dark?: boolean
   arrow?: boolean
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -40,7 +39,6 @@ export default function MagneticLink({
       }}
       className="magnetic-link hoverable"
       style={{
-        color: dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)",
         display: "inline-flex",
         alignItems: "center",
         gap: "12px",

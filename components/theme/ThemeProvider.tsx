@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { getTheme, type Theme } from "@/lib/theme";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { THEME_KEY, getTheme, type Theme } from "@/lib/theme";
 
 type ThemeContextValue = {
   dark: boolean
@@ -10,6 +10,7 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const THEME_EVENT = "ca-theme";
 
 export function useTheme() {
   const ctx = useContext(ThemeContext);
@@ -17,20 +18,49 @@ export function useTheme() {
   return ctx;
 }
 
+function applyTheme(dark: boolean) {
+  const root = document.documentElement;
+  root.setAttribute("data-theme", dark ? "dark" : "light");
+  // Section tints used to pin --bg as an inline style and could outlive a toggle.
+  root.style.removeProperty("--bg");
+}
+
+function readDark(): boolean {
+  return document.documentElement.getAttribute("data-theme") !== "light";
+}
+
+function subscribe(onStoreChange: () => void) {
+  const onStorage = (e: StorageEvent) => {
+    if (e.key !== THEME_KEY) return;
+    applyTheme(e.newValue !== "light");
+    onStoreChange();
+  };
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(THEME_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(THEME_EVENT, onStoreChange);
+  };
+}
+
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  const [dark, setDark] = useState(true);
+  const dark = useSyncExternalStore(subscribe, readDark, () => true);
   const tk = useMemo(() => getTheme(dark), [dark]);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty("--page-bg", tk.bg);
-    root.style.setProperty("--page-fg", tk.text);
-    root.style.setProperty("--accent", tk.accent);
-  }, [tk]);
+  const toggleTheme = useCallback(() => {
+    const nextDark = document.documentElement.getAttribute("data-theme") !== "dark";
+    applyTheme(nextDark);
+    try {
+      localStorage.setItem(THEME_KEY, nextDark ? "dark" : "light");
+    } catch {
+      /* ignore */
+    }
+    window.dispatchEvent(new Event(THEME_EVENT));
+  }, []);
 
   const value = useMemo(
-    () => ({ dark, tk, toggleTheme: () => setDark((d) => !d) }),
-    [dark, tk],
+    () => ({ dark, tk, toggleTheme }),
+    [dark, tk, toggleTheme],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

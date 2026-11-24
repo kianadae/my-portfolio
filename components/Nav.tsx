@@ -4,10 +4,24 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { CV, EMAIL, navItems } from "@/lib/content";
+import { EMAIL, featuredProjects, navItems } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { motionConfig } from "@/lib/motion";
+import LogoPlate from "@/components/LogoPlate";
+
+const menuLinks = [
+  { label: "About", id: "about", href: null as string | null },
+  { label: "Work", id: "work", href: null },
+  { label: "Services", id: "services", href: null },
+  { label: "Experience", id: "experience", href: null },
+  { label: "Skills", id: "skills", href: null },
+  { label: "Play", id: "play", href: "/playground" },
+  { label: "FAQ", id: "faq", href: null },
+  { label: "Contact", id: "contact", href: null },
+];
 
 export default function Nav({
   tk,
@@ -20,15 +34,17 @@ export default function Nav({
   onToggleTheme: () => void
   isMobile: boolean
 }) {
-  const { enabled, toggle, scrollTo } = useMotion();
+  const { enabled, toggle, scrollTo, lockScroll } = useMotion();
   const pathname = usePathname();
   const router = useRouter();
   const atHome = pathname === "/";
   const atPlay = pathname.startsWith("/playground");
+  const atWorkPage = pathname.startsWith("/work");
   const [active, setActive] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
-  const dur = "0.45s";
+  const overlay = useRef<HTMLDivElement>(null);
+  const featured = featuredProjects.slice(0, 2);
 
   useEffect(() => {
     const ids = [...navItems.map((n) => n.toLowerCase()), "play", "services", "faq"];
@@ -59,10 +75,17 @@ export default function Nav({
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
+    lockScroll(menuOpen);
+    return () => lockScroll(false);
+  }, [menuOpen, lockScroll]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
     };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
   const go = (id: string) => {
@@ -80,6 +103,56 @@ export default function Nav({
     else router.push("/");
   };
 
+  const openMenu = () => setMenuOpen(true);
+  const closeMenu = () => {
+    const root = overlay.current;
+    if (!root || !enabled) {
+      setMenuOpen(false);
+      return;
+    }
+    gsap.to(root, {
+      opacity: 0,
+      duration: motionConfig.duration.fast,
+      ease: motionConfig.ease.inOut,
+      onComplete: () => setMenuOpen(false),
+    });
+  };
+
+  useGSAP(() => {
+    const root = overlay.current;
+    if (!root || !menuOpen) return;
+    const links = root.querySelectorAll<HTMLElement>(".site-menu-link");
+    const cards = root.querySelectorAll<HTMLElement>(".site-menu-card");
+    gsap.set(root, { opacity: 1 });
+    if (!enabled) {
+      gsap.set([links, cards], { opacity: 1, y: 0 });
+      return;
+    }
+    gsap.fromTo(
+      links,
+      { opacity: 0, y: 36 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: motionConfig.duration.base,
+        ease: motionConfig.ease.out,
+        stagger: motionConfig.stagger.list,
+      },
+    );
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: motionConfig.menuFromY },
+      {
+        opacity: 1,
+        y: 0,
+        duration: motionConfig.duration.slow,
+        ease: motionConfig.ease.out,
+        stagger: 0.08,
+        delay: 0.16,
+      },
+    );
+  }, { dependencies: [menuOpen, enabled] });
+
   return (
     <>
       <div className="progress-bar" ref={bar} style={{ background: tk.progressBar }} />
@@ -95,10 +168,9 @@ export default function Nav({
           justifyContent: "space-between",
           alignItems: "center",
           padding: isMobile ? "20px 24px" : "24px 64px",
-          background: dark ? "rgba(8,8,8,0.94)" : "rgba(245,243,239,0.96)",
+          background: tk.navBg,
           backdropFilter: "blur(12px)",
           borderBottom: `1px solid ${tk.border}`,
-          transition: `background ${dur}, border-color ${dur}`,
         }}
       >
         <button
@@ -112,8 +184,10 @@ export default function Nav({
             alt="Christian Ada"
             width={120}
             height={44}
+            sizes="120px"
             priority
-            style={{ height: isMobile ? 36 : 44, width: "auto", filter: tk.logoFilter, objectFit: "contain" }}
+            className="site-logo"
+            style={{ height: isMobile ? 36 : 44, width: "auto", objectFit: "contain" }}
           />
         </button>
 
@@ -125,9 +199,9 @@ export default function Nav({
                 <button
                   key={item}
                   type="button"
-                  className={`nav-link${active === id ? " is-active" : ""}`}
+                  className={`nav-link${active === id || (id === "work" && atWorkPage) ? " is-active" : ""}`}
                   onClick={() => go(id)}
-                  style={{ color: active === id ? tk.text : tk.textDimmer }}
+                  style={{ color: active === id || (id === "work" && atWorkPage) ? tk.accent : tk.textDimmer }}
                 >
                   {item}
                 </button>
@@ -136,7 +210,7 @@ export default function Nav({
             <Link
               href="/playground"
               className={`nav-link${atPlay ? " is-active" : ""}`}
-              style={{ color: atPlay ? tk.text : tk.textDimmer }}
+              style={{ color: atPlay ? tk.accent : tk.textDimmer }}
             >
               Play
             </Link>
@@ -172,97 +246,138 @@ export default function Nav({
             </>
           )}
           <ThemeToggle dark={dark} onToggle={onToggleTheme} />
-          {isMobile && (
-            <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Open menu">
-              <span style={{ background: tk.text }} />
-              <span style={{ background: tk.text }} />
-              <span style={{ background: tk.text, width: 14 }} />
-            </button>
-          )}
+          <button
+            type="button"
+            className={isMobile ? "hamburger" : "nav-link hoverable"}
+            onClick={openMenu}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            style={isMobile ? undefined : { color: tk.text }}
+          >
+            {isMobile ? (
+              <>
+                <span style={{ background: tk.text }} />
+                <span style={{ background: tk.text }} />
+                <span style={{ background: tk.text, width: 14 }} />
+              </>
+            ) : (
+              "Menu"
+            )}
+          </button>
         </div>
       </nav>
 
       {menuOpen ? (
         <div
+          ref={overlay}
+          className="site-menu"
           role="dialog"
+          aria-modal="true"
           aria-label="Menu"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 500,
-            background: tk.bg,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 32,
-          }}
+          style={{ background: tk.bg, color: tk.text }}
         >
-          {navItems.map((item) => (
+          <div className="site-menu-top" style={{ padding: isMobile ? "20px 24px" : "24px 64px" }}>
             <button
-              key={item}
               type="button"
-              onClick={() => go(item.toLowerCase())}
-              className="display"
-              style={{
-                fontSize: "3.5rem",
-                color: tk.text,
-                background: "none",
-                border: "none",
-                letterSpacing: "0.05em",
-              }}
+              onClick={goHome}
+              aria-label="Back to top"
+              style={{ background: "none", border: "none", padding: 0, display: "flex" }}
             >
-              {item}
+              <Image
+                src="/logo.png"
+                alt="Christian Ada"
+                width={120}
+                height={44}
+                sizes="120px"
+                className="site-logo"
+                style={{ height: isMobile ? 36 : 44, width: "auto", objectFit: "contain" }}
+              />
             </button>
-          ))}
-          <Link
-            href="/playground"
-            onClick={() => setMenuOpen(false)}
-            className="display"
-            style={{ fontSize: "3.5rem", color: atPlay ? tk.text : tk.textDim, textDecoration: "none", letterSpacing: "0.05em" }}
-          >
-            Play
-          </Link>
-          <a
-            href={`mailto:${EMAIL}`}
-            className="display"
-            style={{ fontSize: "2rem", color: tk.text, textDecoration: "none", letterSpacing: "0.05em" }}
-          >
-            Email
-          </a>
-          <a
-            href={CV}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-link"
-            style={{ color: tk.textDim }}
-          >
-            Download CV
-          </a>
-          <button
-            type="button"
-            className="nav-link"
-            onClick={toggle}
-            aria-pressed={enabled}
-            style={{ color: tk.textDim, marginTop: 8 }}
-          >
-            Motion {enabled ? "on" : "off"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setMenuOpen(false)}
+            <button
+              type="button"
+              className="nav-link hoverable"
+              onClick={closeMenu}
+              style={{ color: tk.text }}
+            >
+              Close
+            </button>
+          </div>
+
+          <div
+            className="site-menu-body"
             style={{
-              color: tk.textDimmer,
-              fontSize: "0.7rem",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              background: "none",
-              border: "none",
-              marginTop: 8,
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              padding: isMobile ? "24px 24px 40px" : "40px 64px 64px",
             }}
           >
-            Tap anywhere to close
-          </button>
+            <div className="site-menu-links">
+              {menuLinks.map((item) =>
+                item.href ? (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="site-menu-link display hoverable"
+                    style={{ color: item.href === "/playground" && atPlay ? tk.accent : tk.text }}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className="site-menu-link display hoverable"
+                    onClick={() => go(item.id)}
+                    style={{ color: active === item.id ? tk.accent : tk.text }}
+                  >
+                    {item.label}
+                  </button>
+                ),
+              )}
+              <div className="site-menu-meta">
+                <a className="nav-link hoverable" href={`mailto:${EMAIL}`} style={{ color: tk.accent }}>
+                  Email
+                </a>
+                {isMobile ? (
+                  <button
+                    type="button"
+                    className="nav-link"
+                    onClick={toggle}
+                    aria-pressed={enabled}
+                    style={{ color: tk.textDim }}
+                  >
+                    Motion {enabled ? "on" : "off"}
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="site-menu-cards">
+              {featured.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/work/${item.slug}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="site-menu-card hoverable"
+                  style={{ borderColor: tk.border, color: tk.text }}
+                >
+                  <LogoPlate
+                    src={item.logo}
+                    plate={item.plate}
+                    alt={item.alt}
+                    sizes="(max-width: 767px) 90vw, 28vw"
+                    style={{ height: isMobile ? 140 : 180 }}
+                  />
+                  <div className="site-menu-card-copy">
+                    <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 6 }}>Case study</div>
+                    <div className="display" style={{ fontSize: "clamp(1.6rem, 2.4vw, 2.4rem)", lineHeight: 0.95 }}>
+                      {item.title}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       ) : null}
     </>

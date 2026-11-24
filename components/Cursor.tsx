@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useMotion } from "./motion/MotionProvider";
 import { motionConfig } from "@/lib/motion";
 
-export default function Cursor({ dark }: { dark: boolean }) {
+export default function Cursor() {
   const ring = useRef<HTMLDivElement>(null);
   const dot = useRef<HTMLDivElement>(null);
   const { enabled, isTouch } = useMotion();
@@ -53,8 +53,8 @@ export default function Cursor({ dark }: { dark: boolean }) {
 
   if (!enabled || isTouch) return null;
 
-  const border = dark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)";
-  const fill = dark ? "white" : "#080808";
+  const border = "color-mix(in srgb, var(--text) 70%, transparent)";
+  const fill = "var(--accent)";
 
   return (
     <>

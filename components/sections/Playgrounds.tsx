@@ -67,7 +67,7 @@ export default function Playgrounds({
         ))}
       </div>
 
-      <Link href="/playground" className="magnetic-link hoverable" style={{ color: tk.textDim, marginTop: 36, display: "inline-flex" }}>
+      <Link href="/playground" className="magnetic-link hoverable" style={{ marginTop: 36, display: "inline-flex" }}>
         Enter the lab
       </Link>
     </section>

@@ -7,6 +7,14 @@ import { motionConfig } from "@/lib/motion";
 
 const WORD = "CHRISTIAN ADA";
 
+function scatterLetter(el: HTMLButtonElement | null, enabled: boolean) {
+  if (!el || !enabled) return;
+  const x = (Math.random() - 0.5) * 90;
+  const y = (Math.random() - 0.5) * 70;
+  const rot = (Math.random() - 0.5) * 22;
+  el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+}
+
 export default function TypeLab({ tk }: { tk: Theme }) {
   const { enabled, isTouch } = useMotion();
   const letters = useRef<(HTMLButtonElement | null)[]>([]);
@@ -18,15 +26,6 @@ export default function TypeLab({ tk }: { tk: Theme }) {
     const x = (e.clientX - r.left - r.width / 2) * motionConfig.magnetic * 1.4;
     const y = (e.clientY - r.top - r.height / 2) * motionConfig.magnetic * 1.4;
     el.style.transform = `translate(${x}px, ${y}px) rotate(${x * 0.1}deg)`;
-  };
-
-  const scatter = (i: number) => {
-    const el = letters.current[i];
-    if (!el || !enabled) return;
-    const x = (Math.random() - 0.5) * 90;
-    const y = (Math.random() - 0.5) * 70;
-    const rot = (Math.random() - 0.5) * 22;
-    el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
   };
 
   const rest = (i: number) => {
@@ -51,7 +50,7 @@ export default function TypeLab({ tk }: { tk: Theme }) {
               className="display hoverable"
               onMouseMove={(e) => magnet(e, i)}
               onMouseLeave={() => rest(i)}
-              onClick={() => scatter(i)}
+              onClick={() => scatterLetter(letters.current[i], enabled)}
               style={{
                 fontSize: "clamp(3.2rem, 9vw, 7.2rem)",
                 lineHeight: 0.9,

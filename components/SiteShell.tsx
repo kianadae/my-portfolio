@@ -13,15 +13,14 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   return (
     <>
       <div className="noise" aria-hidden="true" />
-      {!isMobile ? <Cursor dark={dark} /> : null}
+      {!isMobile ? <Cursor /> : null}
       <Nav tk={tk} dark={dark} onToggleTheme={toggleTheme} isMobile={isMobile} />
       <div
         style={{
-          background: "var(--page-bg)",
+          background: "var(--bg)",
           color: tk.text,
           minHeight: "100vh",
           fontFamily: "var(--font-dm-mono), monospace",
-          transition: "color 0.45s",
         }}
       >
         {children}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import gsap from "gsap";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { gsap } from "@/lib/gsap";
 import { projects } from "@/lib/content";
 import { motionConfig } from "@/lib/motion";
 import { useMotion } from "@/components/motion/MotionProvider";
@@ -29,14 +29,14 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
   );
   const step = 360 / COUNT;
 
-  const apply = (deg: number) => {
+  const apply = useCallback((deg: number) => {
     angle.current = deg;
     if (ring.current) ring.current.style.transform = `rotateY(${deg}deg)`;
     const i = ((Math.round(-deg / step) % COUNT) + COUNT) % COUNT;
     setActive(i);
-  };
+  }, [step]);
 
-  const snap = (i: number) => {
+  const snap = useCallback((i: number) => {
     pauseUntil.current = performance.now() + 1800;
     const next = -i * step;
     if (!enabled || !ring.current) {
@@ -52,7 +52,7 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
       overwrite: true,
       onUpdate: () => apply(state.n),
     });
-  };
+  }, [apply, enabled, step]);
 
   useEffect(() => {
     if (!auto || !enabled) return;
@@ -63,7 +63,7 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
     };
     raf = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(raf);
-  }, [auto, enabled]);
+  }, [auto, enabled, apply]);
 
   useEffect(() => {
     const el = stage.current;
@@ -75,7 +75,7 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [apply]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -85,7 +85,7 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active]);
+  }, [active, snap]);
 
   return (
     <div className="lab-stage">
@@ -124,7 +124,7 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
                   padding: 0,
                 }}
               >
-                <LogoPlate src={item.logo} plate={item.plate} sizes="240px" style={{ width: "100%", height: "100%" }} />
+                <LogoPlate src={item.logo} plate={item.plate} alt={item.alt} sizes="240px" style={{ width: "100%", height: "100%" }} />
               </button>
             ))}
           </div>
@@ -134,17 +134,17 @@ export default function OrbitLab({ tk, isMobile }: { tk: Theme; isMobile: boolea
         {String(active + 1).padStart(2, "0")} — {projects[active].title}
       </p>
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-        <button type="button" className="copy-btn hoverable" style={{ color: tk.textDim, borderColor: tk.border }} onClick={() => snap((active - 1 + COUNT) % COUNT)}>
+        <button type="button" className="btn btn-ghost hoverable" style={{ padding: "8px 14px", color: tk.textDim, borderColor: tk.border }} onClick={() => snap((active - 1 + COUNT) % COUNT)}>
           Prev
         </button>
-        <button type="button" className="copy-btn hoverable" style={{ color: tk.textDim, borderColor: tk.border }} onClick={() => snap((active + 1) % COUNT)}>
+        <button type="button" className="btn btn-ghost hoverable" style={{ padding: "8px 14px", color: tk.textDim, borderColor: tk.border }} onClick={() => snap((active + 1) % COUNT)}>
           Next
         </button>
         <button
           type="button"
-          className="copy-btn hoverable"
+          className="btn btn-ghost hoverable"
           aria-pressed={auto}
-          style={{ color: auto ? tk.text : tk.textDim, borderColor: auto ? tk.text : tk.border }}
+          style={{ padding: "8px 14px", color: auto ? tk.text : tk.textDim, borderColor: auto ? tk.text : tk.border }}
           onClick={() => setAuto((v) => !v)}
         >
           Auto {auto ? "on" : "off"}

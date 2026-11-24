@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { motionConfig } from "@/lib/motion";
 import type { Theme } from "@/lib/theme";
@@ -9,7 +9,7 @@ import type { Theme } from "@/lib/theme";
 const LEAD = "WordPress developer with 5+ years shipping sites from brief to launch —";
 const ITALIC = "custom builds, CRM and payment integrations, and QA across devices.";
 const BODY =
-  "Currently Junior Website Developer at The Web Guys NZ in Parnell, after converting from an internship. Previously shipped 40+ WordPress sites at Sites at Scale, cutting load times by up to 30%. PGDip in Information Technology, Auckland Institute of Studies.";
+  "Currently Junior Website Developer at The Web Guys NZ in Parnell. Previously shipped 60+ WordPress sites at Sites at Scale, cutting load times by up to 30%. PGDip in Information Technology, Auckland Institute of Studies.";
 
 function splitWords(text: string) {
   return text.split(/(\s+)/).filter((t) => t.length > 0);
@@ -30,7 +30,7 @@ export default function About({
   const section = useRef<HTMLElement>(null);
   const dur = "0.45s";
 
-  useEffect(() => {
+  useGSAP(() => {
     const root = section.current;
     if (!root) return;
     const units = root.querySelectorAll<HTMLElement>(".about-word");
@@ -38,28 +38,25 @@ export default function About({
       gsap.set(units, { opacity: 1 });
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        units,
-        { opacity: 0.2 },
-        {
-          opacity: 1,
-          ease: "none",
-          stagger: 0.04,
-          scrollTrigger: {
-            trigger: root,
-            start: "top 88px",
-            end: isMobile ? motionConfig.pin.aboutMobile : motionConfig.pin.about,
-            pin: true,
-            pinSpacing: true,
-            scrub: 0.6,
-            anticipatePin: 1,
-          },
+    gsap.fromTo(
+      units,
+      { opacity: 0.2 },
+      {
+        opacity: 1,
+        ease: "none",
+        stagger: 0.04,
+        scrollTrigger: {
+          trigger: root,
+          start: "top 88px",
+          end: isMobile ? motionConfig.pin.aboutMobile : motionConfig.pin.about,
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.6,
+          anticipatePin: 1,
         },
-      );
-    }, root);
-    return () => ctx.revert();
-  }, [enabled, isMobile]);
+      },
+    );
+  }, { scope: section, dependencies: [enabled, isMobile] });
 
   return (
     <section id="about" ref={section} style={{ padding: `${py} ${px}`, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 3fr", gap: isMobile ? 24 : 64 }}>

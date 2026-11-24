@@ -6,7 +6,7 @@ import SplitText from "@/components/motion/SplitText";
 import FadeIn from "@/components/motion/FadeIn";
 import MagneticLink from "@/components/MagneticLink";
 import { useMotion } from "@/components/motion/MotionProvider";
-import { BEHANCE, CV, EMAIL, LINKEDIN, PHONE, PHONE_LABEL } from "@/lib/content";
+import { BEHANCE, EMAIL, LINKEDIN, PHONE, PHONE_LABEL } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
 
 export default function Contact({
@@ -79,7 +79,6 @@ export default function Contact({
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translate(0px, 0px)";
               }}
-              style={{ color: tk.textDim, borderColor: tk.border }}
             >
               Copy email
             </button>
@@ -90,9 +89,6 @@ export default function Contact({
             <MagneticLink href={BEHANCE} target="_blank" dark={dark}>
               Behance — christian-ada
             </MagneticLink>
-            <MagneticLink href={CV} target="_blank" dark={dark}>
-              Download CV
-            </MagneticLink>
           </div>
         </div>
 
@@ -100,10 +96,12 @@ export default function Contact({
           <div style={{ display: "flex", flexDirection: "column", justifyContent: isMobile ? "flex-start" : "flex-end", height: "100%" }}>
             <Image
               src="/logo.png"
-              alt=""
+              alt="Christian Ada"
               width={120}
               height={40}
-              style={{ height: 40, width: "auto", filter: tk.logoFilter, opacity: 0.18, marginBottom: 20, objectFit: "contain", objectPosition: "left" }}
+              sizes="120px"
+              className="site-logo"
+              style={{ height: 40, width: "auto", opacity: 0.18, marginBottom: 20, objectFit: "contain", objectPosition: "left" }}
             />
             <div className="mono" style={{ color: tk.textFaint, fontSize: "0.72rem", letterSpacing: "0.2em", lineHeight: 2.2 }}>
               <div>Christian Ada</div>

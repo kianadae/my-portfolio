@@ -89,20 +89,20 @@ export default function ScrambleLab({ tk }: { tk: Theme }) {
           <button
             key={w}
             type="button"
-            className="copy-btn hoverable"
+            className="btn btn-ghost hoverable"
             onClick={() => { setAuto(false); scramble(w); }}
             aria-pressed={word === w}
-            style={{ color: word === w ? tk.text : tk.textDim, borderColor: word === w ? tk.text : tk.border }}
+            style={{ padding: "8px 14px", color: word === w ? tk.text : tk.textDim, borderColor: word === w ? tk.text : tk.border }}
           >
             {w}
           </button>
         ))}
         <button
           type="button"
-          className="copy-btn hoverable"
+          className="btn btn-ghost hoverable"
           onClick={() => setAuto((v) => !v)}
           aria-pressed={auto}
-          style={{ color: auto ? tk.text : tk.textDim, borderColor: auto ? tk.text : tk.border }}
+          style={{ padding: "8px 14px", color: auto ? tk.text : tk.textDim, borderColor: auto ? tk.text : tk.border }}
         >
           Auto {auto ? "on" : "off"}
         </button>
@@ -117,7 +117,7 @@ export default function ScrambleLab({ tk }: { tk: Theme }) {
           aria-label="Custom scramble word"
           style={{ color: tk.text, borderColor: tk.border }}
         />
-        <button type="submit" className="copy-btn hoverable" style={{ color: tk.textDim, borderColor: tk.border }}>
+        <button type="submit" className="btn btn-ghost hoverable" style={{ padding: "8px 14px", color: tk.textDim, borderColor: tk.border }}>
           Decode
         </button>
       </form>

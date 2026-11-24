@@ -6,12 +6,14 @@ export default function LogoPlate({
   src,
   plate,
   sizes,
+  alt,
   className = "",
   style,
 }: {
   src: string
   plate: "light" | "dark"
   sizes: string
+  alt: string
   className?: string
   style?: React.CSSProperties
 }) {
@@ -22,7 +24,7 @@ export default function LogoPlate({
     >
       <Image
         src={src}
-        alt=""
+        alt={alt}
         width={640}
         height={320}
         sizes={sizes}

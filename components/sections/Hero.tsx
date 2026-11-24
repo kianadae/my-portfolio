@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import SplitText from "@/components/motion/SplitText";
+import { useRef } from "react";
 import FadeIn from "@/components/motion/FadeIn";
 import AucklandClock from "@/components/AucklandClock";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { motionConfig } from "@/lib/motion";
-import { CV, EMAIL } from "@/lib/content";
+import { EMAIL } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
+
+const HEADLINE = [
+  { text: "CHRISTIAN", accent: false },
+  { text: "ADA", accent: true },
+] as const;
 
 export default function Hero({
   tk,
@@ -24,15 +28,49 @@ export default function Hero({
   const scrollHint = useRef<HTMLDivElement>(null);
   const dur = "0.45s";
 
-  useEffect(() => {
+  useGSAP(() => {
     const root = hero.current;
-    if (!root) return;
+    const nameEl = name.current;
+    if (!root || !nameEl) return;
+
+    const masks = nameEl.querySelectorAll<HTMLElement>(".hero-word-mask");
+    const units = nameEl.querySelectorAll<HTMLElement>(".hero-word-unit");
+
     if (!enabled) {
-      gsap.set([name.current, sub.current, scrollHint.current], { clearProps: "all" });
+      gsap.set([nameEl, sub.current, scrollHint.current], { clearProps: "all" });
+      gsap.set(masks, { clipPath: "none" });
+      gsap.set(units, { yPercent: 0 });
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.timeline({
+
+    gsap.set(masks, { clipPath: motionConfig.hero.clipFrom });
+    gsap.set(units, { yPercent: motionConfig.hero.fromYPercent });
+
+    gsap
+      .timeline()
+      .to(
+        masks,
+        {
+          clipPath: motionConfig.hero.clipTo,
+          duration: motionConfig.duration.hero,
+          ease: motionConfig.ease.out,
+          stagger: motionConfig.stagger.words,
+        },
+        0,
+      )
+      .to(
+        units,
+        {
+          yPercent: 0,
+          duration: motionConfig.duration.hero,
+          ease: motionConfig.ease.out,
+          stagger: motionConfig.stagger.words,
+        },
+        0,
+      );
+
+    gsap
+      .timeline({
         scrollTrigger: {
           trigger: root,
           start: "top top",
@@ -40,16 +78,14 @@ export default function Hero({
           scrub: 0.4,
         },
       })
-        .to(name.current, {
-          y: isMobile ? -36 : -motionConfig.parallaxHero,
-          scale: motionConfig.heroScale,
-          opacity: 0.28,
-          ease: "none",
-        }, 0)
-        .to([sub.current, scrollHint.current], { opacity: 0, y: isMobile ? -12 : -24, ease: "none" }, 0);
-    }, root);
-    return () => ctx.revert();
-  }, [enabled, isMobile]);
+      .to(nameEl, {
+        y: isMobile ? -36 : -motionConfig.parallaxHero,
+        scale: motionConfig.heroScale,
+        opacity: 0.28,
+        ease: "none",
+      }, 0)
+      .to([sub.current, scrollHint.current], { opacity: 0, y: isMobile ? -12 : -24, ease: "none" }, 0);
+  }, { scope: hero, dependencies: [enabled, isMobile] });
 
   return (
     <section
@@ -94,33 +130,27 @@ export default function Hero({
       <div style={{ position: "relative", zIndex: 10 }}>
         <FadeIn delay={0.1}>
           <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 24, letterSpacing: "0.35em" }}>
-            ✦ WordPress Developer {isMobile && "— Auckland, NZ"}
+            <span style={{ color: tk.accent }}>✦</span> WordPress Developer {isMobile && "— Auckland, NZ"}
           </div>
         </FadeIn>
 
         <div ref={name} className="display" style={{ lineHeight: 0.9, transformOrigin: "left center" }}>
           <h1 className="display" style={{ margin: 0, fontWeight: 400 }}>
-            <SplitText
-              text="CHRISTIAN"
-              mode="chars"
-              as="span"
-              className="display hero-name"
-              style={{ color: tk.text }}
-            />
-            <SplitText
-              text="ADA"
-              mode="chars"
-              as="span"
-              delay={0.18}
-              className="display hero-name"
-              style={{ color: tk.textDimmer }}
-            />
+            {HEADLINE.map((line) => (
+              <span
+                key={line.text}
+                className="display hero-name hero-word-mask"
+                style={{ color: line.accent ? tk.accent : tk.text }}
+              >
+                <span className="hero-word-unit">{line.text}</span>
+              </span>
+            ))}
           </h1>
         </div>
 
         <div ref={sub} style={{ marginTop: 32, display: "flex", alignItems: "center", gap: isMobile ? 16 : 40, flexWrap: "wrap" }}>
           <p className="kicker" style={{ color: tk.textDimmer, fontSize: "0.72rem", letterSpacing: "0.15em", maxWidth: 320, lineHeight: 1.8 }}>
-            WordPress · Integrations · QA · Performance
+            WordPress · Integrations · QA
           </p>
           <div style={{ width: 1, height: 32, background: tk.border }} />
           <p className="mono" style={{ color: tk.textDimmer, fontSize: "0.72rem" }}>5+ yrs exp.</p>
@@ -152,9 +182,6 @@ export default function Hero({
         <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 10 }}>
           <a className="btn btn-primary hoverable" href={`mailto:${EMAIL}`}>
             Email me
-          </a>
-          <a className="btn btn-ghost hoverable" href={CV} target="_blank" rel="noopener noreferrer">
-            Download CV
           </a>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { useMotion } from "./MotionProvider";
 import { motionConfig } from "@/lib/motion";
 
@@ -27,7 +27,7 @@ export default function SplitText({
   const ref = useRef<HTMLElement>(null);
   const { enabled } = useMotion();
 
-  useEffect(() => {
+  useGSAP(() => {
     const root = ref.current;
     if (!root) return;
     const units = root.querySelectorAll<HTMLElement>(".split-unit");
@@ -35,22 +35,19 @@ export default function SplitText({
       gsap.set(units, { yPercent: 0, opacity: 1 });
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        units,
-        { yPercent: 110, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: motionConfig.duration.base,
-          ease: motionConfig.ease.out,
-          delay,
-          stagger: mode === "chars" ? motionConfig.stagger.chars : motionConfig.stagger.words,
-        },
-      );
-    }, root);
-    return () => ctx.revert();
-  }, [enabled, delay, mode, once, text]);
+    gsap.fromTo(
+      units,
+      { yPercent: 110, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: motionConfig.duration.base,
+        ease: motionConfig.ease.out,
+        delay,
+        stagger: mode === "chars" ? motionConfig.stagger.chars : motionConfig.stagger.words,
+      },
+    );
+  }, { scope: ref, dependencies: [enabled, delay, mode, once, text] });
 
   const pieces = mode === "chars" ? Array.from(text) : text.split(/(\s+)/);
 

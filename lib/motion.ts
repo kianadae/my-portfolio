@@ -1,4 +1,4 @@
-/** Tunable motion values. Tweak feel here without hunting through components. */
+/** Tunable motion values. Durations, easing, and scroll distances live here. */
 
 export const motionConfig = {
   /** Lenis smoothing. Higher = snappier, lower = heavier. */
@@ -15,11 +15,12 @@ export const motionConfig = {
     base: 0.7,
     slow: 1.0,
     count: 1.6,
+    hero: 0.85,
   },
 
   stagger: {
     chars: 0.035,
-    words: 0.045,
+    words: 0.06,
     chips: 0.04,
     list: 0.06,
   },
@@ -33,12 +34,25 @@ export const motionConfig = {
   previewLerp: 0.12,
   magnetic: 0.28,
 
+  hero: {
+    fromYPercent: 110,
+    clipFrom: "inset(100% 0 0% 0)",
+    clipTo: "inset(0% 0 -14% 0)",
+  },
+
+  workImageFromScale: 1.1,
+  expertiseTilt: 7,
+  expertiseParallax: 10,
+  menuFromY: 72,
+
   /** ScrollTrigger pin distances (desktop). Mobile uses the *Mobile values. */
   pin: {
     about: "+=70%",
     aboutMobile: "+=20%",
     work: "+=420%",
     workMobile: "+=0",
+    proof: "+=220%",
+    proofMobile: "+=0",
   },
 
   marqueeSeconds: 28,

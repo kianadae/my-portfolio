@@ -10,12 +10,8 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
-import { motionConfig, STORAGE_KEY, type MotionPref } from "@/lib/motion";
-
-gsap.registerPlugin(ScrollTrigger);
+import type Lenis from "lenis";
+import { STORAGE_KEY, type MotionPref } from "@/lib/motion";
 
 type MotionContextValue = {
   enabled: boolean
@@ -23,6 +19,8 @@ type MotionContextValue = {
   toggle: () => void
   isTouch: boolean
   scrollTo: (target: string | HTMLElement | number, opts?: { immediate?: boolean }) => void
+  setLenis: (instance: Lenis | null) => void
+  lockScroll: (locked: boolean) => void
 };
 
 const MotionContext = createContext<MotionContextValue | null>(null);
@@ -95,48 +93,12 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     applyClass(enabled);
+    document.documentElement.style.scrollBehavior = enabled ? "auto" : "smooth";
   }, [enabled, applyClass]);
 
-  useEffect(() => {
-    if (!enabled) {
-      lenisRef.current?.destroy();
-      lenisRef.current = null;
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      document.documentElement.style.scrollBehavior = "smooth";
-      return;
-    }
-
-    document.documentElement.style.scrollBehavior = "auto";
-    const touch = window.matchMedia("(pointer: coarse)").matches;
-
-    let lenis: Lenis | null = null;
-    let tickerFn: ((time: number) => void) | null = null;
-
-    if (!touch) {
-      lenis = new Lenis({ lerp: motionConfig.lenisLerp, smoothWheel: true });
-      lenisRef.current = lenis;
-      lenis.on("scroll", ScrollTrigger.update);
-      tickerFn = (time: number) => {
-        lenis?.raf(time * 1000);
-      };
-      gsap.ticker.add(tickerFn);
-      gsap.ticker.lagSmoothing(0);
-    } else {
-      lenisRef.current = null;
-    }
-
-    const onResize = () => ScrollTrigger.refresh();
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      if (tickerFn) gsap.ticker.remove(tickerFn);
-      gsap.ticker.lagSmoothing(500, 33);
-      lenis?.destroy();
-      lenisRef.current = null;
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, [enabled]);
+  const setLenis = useCallback((instance: Lenis | null) => {
+    lenisRef.current = instance;
+  }, []);
 
   const scrollTo = useCallback<MotionContextValue["scrollTo"]>((target, opts) => {
     const lenis = lenisRef.current;
@@ -152,9 +114,16 @@ export default function MotionProvider({ children }: { children: ReactNode }) {
     el?.scrollIntoView({ behavior: enabled ? "smooth" : "auto", block: "start" });
   }, [enabled]);
 
+  const lockScroll = useCallback((locked: boolean) => {
+    const lenis = lenisRef.current;
+    if (locked) lenis?.stop();
+    else lenis?.start();
+    document.body.style.overflow = locked ? "hidden" : "";
+  }, []);
+
   const value = useMemo(
-    () => ({ enabled, setEnabled, toggle, isTouch, scrollTo }),
-    [enabled, setEnabled, toggle, isTouch, scrollTo],
+    () => ({ enabled, setEnabled, toggle, isTouch, scrollTo, setLenis, lockScroll }),
+    [enabled, setEnabled, toggle, isTouch, scrollTo, setLenis, lockScroll],
   );
 
   return <MotionContext.Provider value={value}>{children}</MotionContext.Provider>;

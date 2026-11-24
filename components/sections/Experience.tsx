@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type MouseEvent } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, type MouseEvent } from "react";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { education, jobs, milestones } from "@/lib/content";
 import { motionConfig } from "@/lib/motion";
 import { useMotion } from "@/components/motion/MotionProvider";
@@ -25,7 +24,7 @@ export default function Experience({
   const line = useRef<HTMLDivElement>(null);
   const milestonesRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     const root = timeline.current;
     const lineEl = line.current;
     if (!root || !lineEl) return;
@@ -35,45 +34,42 @@ export default function Experience({
       return;
     }
     const items = root.querySelectorAll<HTMLElement>(".timeline-item");
-    const ctx = gsap.context(() => {
+    gsap.fromTo(
+      lineEl,
+      { scaleY: 0 },
+      {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: root,
+          start: "top 70%",
+          end: "bottom 30%",
+          scrub: true,
+        },
+      },
+    );
+    items.forEach((item) => {
+      ScrollTrigger.create({
+        trigger: item,
+        start: "top center",
+        end: "bottom center",
+        onToggle: (self) => item.classList.toggle("is-active", self.isActive),
+      });
       gsap.fromTo(
-        lineEl,
-        { scaleY: 0 },
+        item,
+        { opacity: 0, y: motionConfig.revealY },
         {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root,
-            start: "top 70%",
-            end: "bottom 30%",
-            scrub: true,
-          },
+          opacity: 1,
+          y: 0,
+          duration: motionConfig.duration.base,
+          ease: motionConfig.ease.out,
+          scrollTrigger: { trigger: item, start: "top 82%", once: true },
         },
       );
-      items.forEach((item) => {
-        ScrollTrigger.create({
-          trigger: item,
-          start: "top center",
-          end: "bottom center",
-          onToggle: (self) => item.classList.toggle("is-active", self.isActive),
-        });
-        gsap.fromTo(
-          item,
-          { opacity: 0, y: motionConfig.revealY },
-          {
-            opacity: 1,
-            y: 0,
-            duration: motionConfig.duration.base,
-            ease: motionConfig.ease.out,
-            scrollTrigger: { trigger: item, start: "top 82%", once: true },
-          },
-        );
-      });
-    }, root);
-    return () => ctx.revert();
-  }, [enabled]);
+    });
+  }, { scope: timeline, dependencies: [enabled] });
 
-  useEffect(() => {
+  useGSAP(() => {
     const root = milestonesRef.current;
     if (!root) return;
     const cards = root.querySelectorAll<HTMLElement>(".milestone-card");
@@ -81,22 +77,19 @@ export default function Experience({
       gsap.set(cards, { opacity: 1, y: 0 });
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 32 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: motionConfig.duration.base,
-          ease: motionConfig.ease.out,
-          stagger: 0.12,
-          scrollTrigger: { trigger: root, start: "top 80%", once: true },
-        },
-      );
-    }, root);
-    return () => ctx.revert();
-  }, [enabled]);
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 32 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: motionConfig.duration.base,
+        ease: motionConfig.ease.out,
+        stagger: 0.12,
+        scrollTrigger: { trigger: root, start: "top 80%", once: true },
+      },
+    );
+  }, { scope: milestonesRef, dependencies: [enabled] });
 
   const tilt = (e: MouseEvent<HTMLDivElement>) => {
     if (!enabled || isTouch || isMobile) return;
@@ -118,7 +111,7 @@ export default function Experience({
         </FadeIn>
         <FadeIn delay={0.1}>
           <p style={{ color: tk.textDim, fontSize: "0.875rem", lineHeight: 1.8, display: "flex", alignItems: isMobile ? "flex-start" : "flex-end", minHeight: isMobile ? undefined : "100%" }}>
-            From shipping 40+ WordPress sites in production to joining a Parnell agency full-time after an internship.
+            From shipping 60+ WordPress sites in production to Junior Developer at The Web Guys NZ.
           </p>
         </FadeIn>
       </div>
@@ -126,7 +119,7 @@ export default function Experience({
       <div ref={timeline} className="timeline" style={{ color: tk.text }}>
         <div ref={line} className="timeline-line" />
         {jobs.map((job) => (
-          <div key={job.company} className="timeline-item" style={{ paddingTop: 28, paddingBottom: 28, borderBottom: `1px solid ${tk.border}` }}>
+          <div key={`${job.company}-${job.role}`} className="timeline-item" style={{ paddingTop: 28, paddingBottom: 28, borderBottom: `1px solid ${tk.border}` }}>
             <span className="timeline-dot" aria-hidden="true" />
             <div className="mono" style={{ color: tk.textDimmer, fontSize: "0.65rem", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 8 }}>
               {job.dates}

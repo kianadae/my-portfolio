@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type MouseEvent } from "react";
-import gsap from "gsap";
+import { useRef, type MouseEvent } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { skillGroups } from "@/lib/content";
 import { motionConfig } from "@/lib/motion";
 import { useMotion } from "@/components/motion/MotionProvider";
@@ -64,7 +64,7 @@ export default function Skills({
   const root = useRef<HTMLElement>(null);
   const groups = Object.entries(skillGroups);
 
-  useEffect(() => {
+  useGSAP(() => {
     const el = root.current;
     if (!el) return;
     const chips = el.querySelectorAll<HTMLElement>(".skill-pill");
@@ -72,33 +72,30 @@ export default function Skills({
       gsap.set(chips, { opacity: 1, y: 0 });
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        chips,
-        { opacity: 0, y: 18 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: motionConfig.duration.base,
-          ease: motionConfig.ease.out,
-          stagger: motionConfig.stagger.chips,
-          scrollTrigger: { trigger: el, start: "top 78%", once: true },
-          onComplete: () => {
-            if (isTouch) return;
-            gsap.to(chips, {
-              y: -5,
-              duration: 2.6,
-              yoyo: true,
-              repeat: -1,
-              ease: "sine.inOut",
-              stagger: { each: 0.12, from: "random" },
-            });
-          },
+    gsap.fromTo(
+      chips,
+      { opacity: 0, y: 18 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: motionConfig.duration.base,
+        ease: motionConfig.ease.out,
+        stagger: motionConfig.stagger.chips,
+        scrollTrigger: { trigger: el, start: "top 78%", once: true },
+        onComplete: () => {
+          if (isTouch) return;
+          gsap.to(chips, {
+            y: -5,
+            duration: 2.6,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            stagger: { each: 0.12, from: "random" },
+          });
         },
-      );
-    }, el);
-    return () => ctx.revert();
-  }, [enabled, isTouch]);
+      },
+    );
+  }, { scope: root, dependencies: [enabled, isTouch] });
 
   return (
     <section

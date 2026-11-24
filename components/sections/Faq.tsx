@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { faqs } from "@/lib/content";
+import { motionConfig } from "@/lib/motion";
+import { useMotion } from "@/components/motion/MotionProvider";
 import FadeIn from "@/components/motion/FadeIn";
 import type { Theme } from "@/lib/theme";
 
@@ -16,7 +19,43 @@ export default function Faq({
   px: string
   py: string
 }) {
+  const { enabled } = useMotion();
   const [open, setOpen] = useState(0);
+  const list = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const root = list.current;
+    if (!root) return;
+    const panels = root.querySelectorAll<HTMLElement>(".faq-panel");
+    const icons = root.querySelectorAll<HTMLElement>(".faq-icon");
+
+    panels.forEach((panel, i) => {
+      const isOpen = open === i;
+      const icon = icons[i];
+      const inner = panel.querySelector<HTMLElement>(".faq-panel-inner");
+      const target = isOpen && inner ? inner.scrollHeight : 0;
+      if (!enabled) {
+        gsap.set(panel, { height: isOpen ? "auto" : 0 });
+        if (icon) gsap.set(icon, { rotate: isOpen ? 45 : 0 });
+        return;
+      }
+      gsap.to(panel, {
+        height: target,
+        duration: motionConfig.duration.fast,
+        ease: motionConfig.ease.out,
+        onComplete: () => {
+          if (isOpen) gsap.set(panel, { height: "auto" });
+        },
+      });
+      if (icon) {
+        gsap.to(icon, {
+          rotate: isOpen ? 45 : 0,
+          duration: motionConfig.duration.fast,
+          ease: motionConfig.ease.out,
+        });
+      }
+    });
+  }, { scope: list, dependencies: [open, enabled] });
 
   return (
     <section id="faq" style={{ padding: `${py} ${px}`, borderTop: `1px solid ${tk.border}` }}>
@@ -27,30 +66,35 @@ export default function Faq({
             Before you write
           </h2>
         </FadeIn>
-        <div>
+        <div ref={list}>
           {faqs.map((item, i) => {
             const on = open === i;
+            const panelId = `faq-panel-${i}`;
             return (
-              <button
-                key={item.q}
-                type="button"
-                className="faq-item hoverable"
-                aria-expanded={on}
-                onClick={() => setOpen(on ? -1 : i)}
-                style={{ borderColor: tk.border, color: tk.text }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "baseline" }}>
+              <div key={item.q} className="faq-row" style={{ borderColor: tk.border, color: tk.text }}>
+                <button
+                  type="button"
+                  className="faq-item hoverable"
+                  aria-expanded={on}
+                  aria-controls={panelId}
+                  onClick={() => setOpen(on ? -1 : i)}
+                  style={{ borderColor: tk.border, color: tk.text }}
+                >
                   <span className="display" style={{ fontSize: "clamp(1.15rem, 2vw, 1.55rem)", textAlign: "left" }}>
                     {item.q}
                   </span>
-                  <span className="mono" style={{ color: tk.textDimmer, fontSize: "0.7rem" }}>{on ? "–" : "+"}</span>
+                  <span className="faq-icon mono" aria-hidden="true" style={{ color: tk.textDimmer }}>
+                    +
+                  </span>
+                </button>
+                <div id={panelId} className={`faq-panel${on ? " is-open" : ""}`} role="region">
+                  <div className="faq-panel-inner">
+                    <p style={{ color: tk.textDim, fontSize: "0.88rem", lineHeight: 1.7, margin: "0 0 18px", maxWidth: 560 }}>
+                      {item.a}
+                    </p>
+                  </div>
                 </div>
-                {on ? (
-                  <p style={{ color: tk.textDim, fontSize: "0.88rem", lineHeight: 1.7, margin: "12px 0 0", textAlign: "left", maxWidth: 560 }}>
-                    {item.a}
-                  </p>
-                ) : null}
-              </button>
+              </div>
             );
           })}
         </div>

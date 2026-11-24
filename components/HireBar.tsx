@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CV, EMAIL } from "@/lib/content";
+import { EMAIL } from "@/lib/content";
 import type { Theme } from "@/lib/theme";
 import useIsMobile from "@/hooks/useIsMobile";
 
@@ -38,9 +38,6 @@ export default function HireBar({ tk }: { tk: Theme }) {
       ) : null}
       <a className="btn btn-primary hoverable" href={`mailto:${EMAIL}`} style={{ padding: "10px 16px" }}>
         Email
-      </a>
-      <a className="btn btn-ghost hoverable" href={CV} target="_blank" rel="noopener noreferrer" style={{ padding: "10px 16px" }}>
-        CV
       </a>
     </div>
   );
