@@ -9,14 +9,7 @@ export type Project = {
   role: string
   tech: string[]
   result: string
-  liveUrl: string
   featured?: boolean
-  caseStudy?: {
-    problem: string
-    built: string
-    metric: { value: string; label: string }
-    gallery: { src: string; alt: string }[]
-  }
 };
 
 export const projects: Project[] = [
@@ -30,15 +23,8 @@ export const projects: Project[] = [
     summary: "WPBakery WordPress site for Prominent, with Gravity Forms, Yoast SEO and WP Rocket caching.",
     role: "WordPress developer",
     tech: ["WordPress", "WPBakery", "Gravity Forms", "WP Rocket"],
-    result: "Live WordPress site with forms, SEO and caching on LiteSpeed.",
-    liveUrl: "https://www.prominent.com.au",
+    result: "WordPress site with forms, SEO and caching on LiteSpeed.",
     featured: true,
-    caseStudy: {
-      problem: "The brand needed a WordPress site that presented the business clearly, captured enquiries, and stayed fast after launch.",
-      built: "WPBakery WordPress build with Gravity Forms, Yoast SEO and WP Rocket, then QA across browsers and devices before handoff.",
-      metric: { value: "Shipped", label: "WordPress delivery" },
-      gallery: [{ src: "/projects/prominent.png", alt: "Prominent WordPress project logo" }],
-    },
   },
   {
     title: "Lucky 13 Fitness",
@@ -50,15 +36,8 @@ export const projects: Project[] = [
     summary: "Divi WordPress site for Lucky 13 Fitness, with Rank Math SEO and a layout that works on phones.",
     role: "WordPress developer",
     tech: ["WordPress", "Divi", "Rank Math", "PHP"],
-    result: "Live fitness site on Divi with Rank Math in production.",
-    liveUrl: "https://www.lucky13fitness.com",
+    result: "Fitness site on Divi with Rank Math in production.",
     featured: true,
-    caseStudy: {
-      problem: "A fitness brand needed a WordPress site that looked like the gym and stayed usable on mobile.",
-      built: "Divi WordPress build with Rank Math SEO, a responsive layout, and device checks before launch.",
-      metric: { value: "Shipped", label: "WordPress delivery" },
-      gallery: [{ src: "/projects/lucky13-fitness.png", alt: "Lucky 13 Fitness WordPress project logo" }],
-    },
   },
   {
     title: "Brancourts",
@@ -71,14 +50,7 @@ export const projects: Project[] = [
     role: "WordPress developer",
     tech: ["WordPress", "Kinsta", "PHP", "MySQL"],
     result: "Production WordPress site running on Kinsta.",
-    liveUrl: "https://brancourts.com",
     featured: true,
-    caseStudy: {
-      problem: "Brancourts needed a WordPress site that carried the brand and could be maintained after launch.",
-      built: "Custom WordPress pages on Kinsta, with a responsive layout and QA before handoff so what was approved is what shipped.",
-      metric: { value: "Shipped", label: "WordPress delivery" },
-      gallery: [{ src: "/projects/brancourts.png", alt: "Brancourts WordPress project logo" }],
-    },
   },
   {
     title: "RMA Sport",
@@ -90,8 +62,7 @@ export const projects: Project[] = [
     summary: "WPBakery WordPress site for RMA Sport, with Gravity Forms, WP Rocket and PayU payments.",
     role: "WordPress developer",
     tech: ["WordPress", "WPBakery", "Gravity Forms", "PayU"],
-    result: "Live sports site with forms, caching and PayU checkout.",
-    liveUrl: "https://www.rmasport.com.au",
+    result: "Sports site with forms, caching and PayU checkout.",
   },
   {
     title: "Blue Diamond Solutions",
@@ -103,8 +74,7 @@ export const projects: Project[] = [
     summary: "WordPress site for Blue Diamond Solutions, connected to BigCommerce and HubSpot.",
     role: "WordPress developer",
     tech: ["WordPress", "BigCommerce", "HubSpot", "PHP"],
-    result: "Live machinery site with ecommerce and HubSpot in production.",
-    liveUrl: "https://solutions.bluedm.com.au",
+    result: "Machinery site with ecommerce and HubSpot in production.",
   },
   {
     title: "Clinical Assessor",
@@ -116,8 +86,7 @@ export const projects: Project[] = [
     summary: "WPBakery WordPress site for Clinical Assessor, with Gravity Forms, Yoast SEO and Google Maps.",
     role: "WordPress developer",
     tech: ["WordPress", "WPBakery", "Gravity Forms", "Google Maps"],
-    result: "Live clinical services site with enquiry forms and maps.",
-    liveUrl: "https://www.clinicalassessor.com",
+    result: "Clinical services site with enquiry forms and maps.",
   },
   {
     title: "Team Kids",
@@ -129,8 +98,7 @@ export const projects: Project[] = [
     summary: "WPBakery WordPress site for Team Kids, with Freshworks CRM and Yoast SEO.",
     role: "WordPress developer",
     tech: ["WordPress", "WPBakery", "Freshworks CRM", "Yoast SEO"],
-    result: "Live education site with CRM and SEO in production.",
-    liveUrl: "https://www.teamkids.com.au",
+    result: "Education site with CRM and SEO in production.",
   },
   {
     title: "Dek Designs",
@@ -142,16 +110,11 @@ export const projects: Project[] = [
     summary: "WordPress site for Dek Designs with Ecwid ecommerce, Stripe payments and GSAP motion.",
     role: "WordPress developer",
     tech: ["WordPress", "Ecwid", "Stripe", "GSAP"],
-    result: "Live design-studio site with shop, payments and motion.",
-    liveUrl: "https://www.dekdesigns.com.au",
+    result: "Design-studio site with shop, payments and motion.",
   },
 ];
 
-export function getProjectBySlug(slug: string) {
-  return projects.find((p) => p.slug === slug);
-}
-
-export const featuredProjects = projects.filter((p) => p.featured && p.caseStudy);
+export const featuredProjects = projects.filter((p) => p.featured);
 
 export const jobs = [
   {
