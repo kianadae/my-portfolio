@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Palette: true black / silver / white, inverted for light. */
+/* Palette: true black / silver / white, inverted for light. Mobile layout 2026-11. */
 @property --bg {
   syntax: "<color>";
   inherits: true;
@@ -40,7 +40,9 @@
 html {
   background-color: var(--bg);
   background: var(--bg);
-  scroll-padding-top: 88px;
+  scroll-padding-top: max(88px, calc(env(safe-area-inset-top, 0px) + 64px));
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 section[id] {
@@ -115,6 +117,48 @@ a.accent-link,
 
 .hero {
   --hero-name: clamp(3.6rem, 15vw, 16rem);
+  padding: 132px 64px 96px;
+}
+
+.hero-loc,
+.hero-clock-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    --hero-name: clamp(2.35rem, 11.5vw, 3.2rem);
+    padding: 108px 20px max(80px, calc(env(safe-area-inset-bottom, 0px) + 64px));
+  }
+
+  .hero-ghost {
+    font-size: clamp(4.8rem, 36vw, 7rem);
+  }
+
+  .hero-kicker {
+    letter-spacing: 0.1em;
+  }
+
+  .hero-kicker .hero-loc {
+    display: inline;
+  }
+
+  .hero-clock-mobile {
+    display: block;
+  }
+
+  .hero-desktop-meta,
+  .hero-scroll-hint,
+  .hero-sub-divider {
+    display: none !important;
+  }
+
+  .hero-sub {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-top: 20px !important;
+  }
 }
 
 .hero-name {
@@ -147,13 +191,13 @@ a.accent-link,
   font-size: clamp(8rem, 32vw, 42rem);
 }
 
-@media (max-height: 820px) {
+@media (max-height: 820px) and (min-width: 768px) {
   .hero {
     --hero-name: clamp(2.8rem, 12vh, 7.5rem);
   }
 }
 
-@media (max-height: 640px) {
+@media (max-height: 640px) and (min-width: 768px) {
   .hero {
     --hero-name: clamp(2.4rem, 9vh, 4.4rem);
     justify-content: center;
@@ -291,21 +335,44 @@ a.accent-link,
   transform: translateX(22px);
 }
 
+.site-nav {
+  padding: 24px 64px;
+  padding-top: max(24px, env(safe-area-inset-top, 0px));
+}
+
 .hamburger {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   cursor: pointer;
   padding: 4px;
   background: none;
   border: none;
 }
 
-.hamburger span {
+.hamburger-icon {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger-icon span {
   display: block;
   width: 22px;
   height: 1.5px;
   transition: background 0.4s;
+}
+
+.nav-menu-label {
+  display: inline;
+}
+
+.nav-cta-desktop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .skill-pill {
@@ -585,7 +652,7 @@ button.work-orbit-card {
 .hire-bar {
   position: fixed;
   left: 50%;
-  bottom: 20px;
+  bottom: max(16px, env(safe-area-inset-bottom));
   transform: translateX(-50%) translateY(20px);
   z-index: 90;
   display: flex;
@@ -660,6 +727,21 @@ button.work-orbit-card {
 }
 
 @media (max-width: 767px) {
+  .site-nav {
+    padding: 12px 20px;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+  }
+
+  .nav-desktop,
+  .nav-cta-desktop,
+  .nav-menu-label {
+    display: none !important;
+  }
+
+  .hamburger-icon {
+    display: flex;
+  }
+
   .work-stack-item {
     position: relative;
     top: auto !important;
@@ -667,6 +749,104 @@ button.work-orbit-card {
 
   .work-stack-card {
     min-height: 0;
+  }
+
+  .work-stack-copy {
+    padding: 20px 18px 22px;
+  }
+
+  .work-stack-copy .display {
+    overflow-wrap: anywhere;
+    font-size: clamp(1.7rem, 8vw, 2.15rem);
+  }
+
+  .expertise-card {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+  }
+
+  .expertise-media {
+    width: 3.75rem;
+  }
+
+  .expertise-figure {
+    min-height: 5.25rem;
+    font-size: 1.55rem;
+  }
+
+  .expertise-copy {
+    padding: 16px 14px 18px 12px;
+  }
+
+  .proof-line {
+    font-size: clamp(1.55rem, 8.5vw, 2.15rem);
+    max-width: none;
+    margin-bottom: 20px;
+  }
+
+  .site-menu {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .site-menu-top {
+    padding: 12px 20px;
+  }
+
+  .site-menu-body {
+    grid-template-columns: 1fr !important;
+    padding: 20px 20px 40px !important;
+  }
+
+  .site-menu-cards {
+    display: none;
+  }
+
+  .site-menu-link {
+    font-size: clamp(1.55rem, 8vw, 2.05rem);
+  }
+
+  .site-menu-body {
+    align-items: start;
+  }
+
+  .hire-bar {
+    gap: 10px;
+    padding: 8px 10px 8px 14px;
+    bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  }
+
+  .magnetic-link {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+  }
+
+  .stats-grid .stats-cell {
+    padding: 20px 10px 22px !important;
+  }
+
+  .stats-value {
+    font-size: 1.7rem !important;
+  }
+
+  .stats-label {
+    font-size: 0.5rem !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .kicker {
+    letter-spacing: 0.16em;
+  }
+
+  .hero-status {
+    letter-spacing: 0.08em !important;
+    font-size: 0.58rem !important;
+    flex-wrap: wrap;
+  }
+
+  section[id] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 }
 
@@ -713,8 +893,9 @@ button.work-orbit-card {
 }
 
 .expertise-card {
+  --expertise-num: 5.25rem;
   display: grid;
-  grid-template-columns: 5.25rem minmax(0, 1fr);
+  grid-template-columns: var(--expertise-num) minmax(0, 1fr);
   align-items: stretch;
   overflow: hidden;
   transform-origin: center center;
@@ -723,7 +904,7 @@ button.work-orbit-card {
 }
 
 .expertise-media {
-  width: 5.25rem;
+  width: var(--expertise-num);
   min-height: 100%;
   overflow: hidden;
   background: color-mix(in srgb, var(--accent) 14%, transparent);
@@ -765,14 +946,21 @@ button.work-orbit-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 24px 64px;
 }
 
 .site-menu-body {
   flex: 1;
   display: grid;
   gap: 40px;
-  align-items: center;
+  align-items: start;
   overflow: auto;
+}
+
+@media (min-width: 768px) {
+  .site-menu-body {
+    align-items: center;
+  }
 }
 
 .site-menu-links {
@@ -1038,5 +1226,38 @@ button.work-orbit-card {
   html.motion-off .marquee-track,
   html:not(.motion-on) .marquee-track {
     animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .site-menu-body {
+    align-items: start;
+  }
+
+  .site-menu-link {
+    font-size: clamp(1.55rem, 8vw, 2.05rem);
+  }
+
+  .proof-line {
+    font-size: clamp(1.55rem, 8.5vw, 2.15rem);
+    max-width: none;
+  }
+
+  .project-detail {
+    padding-left: 0;
+  }
+
+  .expertise-card {
+    --expertise-num: 3.75rem;
+    grid-template-columns: 3.75rem minmax(0, 1fr) !important;
+  }
+
+  .expertise-media {
+    width: 3.75rem !important;
+  }
+
+  .expertise-figure {
+    min-height: 5.25rem;
+    font-size: 1.55rem;
   }
 }

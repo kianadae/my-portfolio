@@ -157,6 +157,7 @@ export default function Nav({
       <div className="progress-bar" ref={bar} style={{ background: tk.progressBar }} />
 
       <nav
+        className="site-nav"
         style={{
           position: "fixed",
           top: 0,
@@ -166,7 +167,6 @@ export default function Nav({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: isMobile ? "20px 24px" : "24px 64px",
           background: tk.navBg,
           backdropFilter: "blur(12px)",
           borderBottom: `1px solid ${tk.border}`,
@@ -190,78 +190,71 @@ export default function Nav({
           />
         </button>
 
-        {!isMobile && (
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            {navItems.map((item) => {
-              const id = item.toLowerCase();
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  className={`nav-link${active === id ? " is-active" : ""}`}
-                  onClick={() => go(id)}
-                  style={{ color: active === id ? tk.accent : tk.textDimmer }}
-                >
-                  {item}
-                </button>
-              );
-            })}
-            <Link
-              href="/playground"
-              className={`nav-link${atPlay ? " is-active" : ""}`}
-              style={{ color: atPlay ? tk.accent : tk.textDimmer }}
-            >
-              Play
-            </Link>
-          </div>
-        )}
-
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {!isMobile && (
-            <>
-              <a className="nav-link hoverable" href={`mailto:${EMAIL}`} style={{ color: tk.text }}>
-                Email
-              </a>
+        <div className="nav-desktop" style={{ display: "flex", gap: 24, alignItems: "center" }}>
+          {navItems.map((item) => {
+            const id = item.toLowerCase();
+            return (
               <button
+                key={item}
                 type="button"
-                className="nav-link hoverable"
-                onClick={toggle}
-                aria-pressed={enabled}
-                style={{ color: tk.textDimmer }}
+                className={`nav-link${active === id ? " is-active" : ""}`}
+                onClick={() => go(id)}
+                style={{ color: active === id ? tk.accent : tk.textDimmer }}
               >
-                Motion {enabled ? "on" : "off"}
+                {item}
               </button>
-              <span
-                style={{
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.25em",
-                  color: tk.textDimmer,
-                  fontFamily: "var(--font-dm-mono), monospace",
-                  textTransform: "uppercase",
-                }}
-              >
-                {dark ? "Dark" : "Light"}
-              </span>
-            </>
-          )}
+            );
+          })}
+          <Link
+            href="/playground"
+            className={`nav-link${atPlay ? " is-active" : ""}`}
+            style={{ color: atPlay ? tk.accent : tk.textDimmer }}
+          >
+            Play
+          </Link>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 14 }}>
+          <div className="nav-cta-desktop">
+            <a className="nav-link hoverable" href={`mailto:${EMAIL}`} style={{ color: tk.text }}>
+              Email
+            </a>
+            <button
+              type="button"
+              className="nav-link hoverable"
+              onClick={toggle}
+              aria-pressed={enabled}
+              style={{ color: tk.textDimmer }}
+            >
+              Motion {enabled ? "on" : "off"}
+            </button>
+            <span
+              style={{
+                fontSize: "0.65rem",
+                letterSpacing: "0.25em",
+                color: tk.textDimmer,
+                fontFamily: "var(--font-dm-mono), monospace",
+                textTransform: "uppercase",
+              }}
+            >
+              {dark ? "Dark" : "Light"}
+            </span>
+          </div>
           <ThemeToggle dark={dark} onToggle={onToggleTheme} />
           <button
             type="button"
-            className={isMobile ? "hamburger" : "nav-link hoverable"}
+            className="hamburger"
             onClick={openMenu}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            style={isMobile ? undefined : { color: tk.text }}
+            style={{ color: tk.text }}
           >
-            {isMobile ? (
-              <>
-                <span style={{ background: tk.text }} />
-                <span style={{ background: tk.text }} />
-                <span style={{ background: tk.text, width: 14 }} />
-              </>
-            ) : (
-              "Menu"
-            )}
+            <span className="hamburger-icon" aria-hidden="true">
+              <span style={{ background: tk.text }} />
+              <span style={{ background: tk.text }} />
+              <span style={{ background: tk.text, width: 14 }} />
+            </span>
+            <span className="nav-menu-label">Menu</span>
           </button>
         </div>
       </nav>
@@ -351,6 +344,7 @@ export default function Nav({
               </div>
             </div>
 
+            {isMobile ? null : (
             <div className="site-menu-cards">
               {featured.map((item) => (
                 <button
@@ -376,6 +370,7 @@ export default function Nav({
                 </button>
               ))}
             </div>
+            )}
           </div>
         </div>
       ) : null}

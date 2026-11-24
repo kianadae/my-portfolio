@@ -47,27 +47,28 @@ export default function Stats({ tk, isMobile }: { tk: Theme; isMobile: boolean }
 
   return (
     <section
+      className="stats-grid"
       style={{
         borderTop: `1px solid ${tk.border}`,
         borderBottom: `1px solid ${tk.border}`,
         display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+        gridTemplateColumns: "repeat(3, 1fr)",
       }}
     >
       {stats.map((s, i) => (
         <div
           key={s.label}
+          className="stats-cell"
           style={{
-            padding: isMobile ? "28px 24px" : "36px 64px",
-            borderRight: !isMobile && i < stats.length - 1 ? `1px solid ${tk.border}` : "none",
-            borderBottom: isMobile && i < stats.length - 1 ? `1px solid ${tk.border}` : "none",
+            padding: isMobile ? "22px 12px 24px" : "36px 64px",
+            borderRight: i < stats.length - 1 ? `1px solid ${tk.border}` : "none",
             transition: `border-color ${dur}`,
           }}
         >
-          <div className="display" style={{ fontSize: isMobile ? "2.5rem" : "3.5rem", lineHeight: 1, color: tk.accent }}>
+          <div className="display stats-value" style={{ fontSize: isMobile ? "1.85rem" : "3.5rem", lineHeight: 1, color: tk.accent }}>
             <Counter value={s.value} suffix={s.suffix} enabled={enabled} />
           </div>
-          <div className="kicker" style={{ color: tk.textDimmer, fontSize: "0.65rem", letterSpacing: "0.15em", marginTop: 6 }}>
+          <div className="kicker stats-label" style={{ color: tk.textDimmer, fontSize: isMobile ? "0.52rem" : "0.65rem", letterSpacing: isMobile ? "0.08em" : "0.15em", marginTop: 6, lineHeight: 1.4 }}>
             {s.label}
           </div>
         </div>

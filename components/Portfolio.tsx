@@ -19,8 +19,8 @@ import HireBar from "@/components/HireBar";
 export default function Portfolio() {
   const isMobile = useIsMobile();
   const { dark, tk } = useTheme();
-  const px = isMobile ? "24px" : "64px";
-  const py = isMobile ? "80px" : "160px";
+  const px = isMobile ? "20px" : "64px";
+  const py = isMobile ? "72px" : "160px";
 
   return (
     <SiteShell>
