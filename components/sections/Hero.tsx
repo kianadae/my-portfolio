@@ -37,7 +37,7 @@ export default function Hero({
     const units = nameEl.querySelectorAll<HTMLElement>(".hero-word-unit");
 
     if (!enabled) {
-      gsap.set([nameEl, sub.current, scrollHint.current], { clearProps: "all" });
+      gsap.set([nameEl, sub.current, scrollHint.current].filter(Boolean), { clearProps: "all" });
       gsap.set(masks, { clipPath: "none" });
       gsap.set(units, { yPercent: 0 });
       return;
@@ -84,7 +84,7 @@ export default function Hero({
         opacity: 0.28,
         ease: "none",
       }, 0)
-      .to([sub.current, scrollHint.current], { opacity: 0, y: isMobile ? -12 : -24, ease: "none" }, 0);
+      .to([sub.current, scrollHint.current].filter(Boolean), { opacity: 0, y: isMobile ? -12 : -24, ease: "none" }, 0);
   }, { scope: hero, dependencies: [enabled, isMobile] });
 
   return (
@@ -98,7 +98,6 @@ export default function Hero({
         flexDirection: "column",
         justifyContent: "flex-end",
         minHeight: "100svh",
-        padding: isMobile ? "112px 24px 72px" : "132px 64px 96px",
         overflowX: "hidden",
       }}
     >
@@ -117,20 +116,19 @@ export default function Hero({
         </div>
       </div>
 
-      {!isMobile && (
-        <div style={{ position: "absolute", top: 94, right: 64, textAlign: "right" }}>
-          <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 4 }}>Based in</div>
-          <div className="kicker" style={{ color: tk.textDim, letterSpacing: "0.2em" }}>Auckland, NZ</div>
-          <div className="mono" style={{ marginTop: 8, fontSize: "0.65rem" }}>
-            <AucklandClock color={tk.textDimmer} />
-          </div>
+      <div className="hero-desktop-meta" style={{ position: "absolute", top: 94, right: 64, textAlign: "right" }}>
+        <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 4 }}>Based in</div>
+        <div className="kicker" style={{ color: tk.textDim, letterSpacing: "0.2em" }}>Auckland, NZ</div>
+        <div className="mono" style={{ marginTop: 8, fontSize: "0.65rem" }}>
+          <AucklandClock color={tk.textDimmer} />
         </div>
-      )}
+      </div>
 
       <div style={{ position: "relative", zIndex: 10 }}>
         <FadeIn delay={0.1}>
-          <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 24, letterSpacing: "0.35em" }}>
-            <span style={{ color: tk.accent }}>✦</span> WordPress Developer {isMobile && "— Auckland, NZ"}
+          <div className="kicker hero-kicker" style={{ color: tk.textDimmer, marginBottom: isMobile ? 16 : 24 }}>
+            <span style={{ color: tk.accent }}>✦</span> WordPress Developer
+            <span className="hero-loc"> — Auckland, NZ</span>
           </div>
         </FadeIn>
 
@@ -148,22 +146,30 @@ export default function Hero({
           </h1>
         </div>
 
-        <div ref={sub} style={{ marginTop: 32, display: "flex", alignItems: "center", gap: isMobile ? 16 : 40, flexWrap: "wrap" }}>
-          <p className="kicker" style={{ color: tk.textDimmer, fontSize: "0.72rem", letterSpacing: "0.15em", maxWidth: 320, lineHeight: 1.8 }}>
+        <div
+          ref={sub}
+          className="hero-sub"
+          style={{
+            marginTop: 32,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 40,
+          }}
+        >
+          <p className="kicker" style={{ color: tk.textDimmer, fontSize: "0.72rem", letterSpacing: isMobile ? "0.12em" : "0.15em", maxWidth: isMobile ? "100%" : 320, lineHeight: 1.8, margin: 0 }}>
             WordPress · Integrations · QA
           </p>
-          <div style={{ width: 1, height: 32, background: tk.border }} />
-          <p className="mono" style={{ color: tk.textDimmer, fontSize: "0.72rem" }}>5+ yrs exp.</p>
-          {isMobile ? (
-            <div className="mono" style={{ fontSize: "0.65rem" }}>
-              <AucklandClock color={tk.textDimmer} />
-            </div>
-          ) : null}
+          <div className="hero-sub-divider" style={{ width: 1, height: 32, background: tk.border }} />
+          <p className="mono" style={{ color: tk.textDimmer, fontSize: "0.72rem", margin: 0 }}>5+ yrs exp.</p>
+          <div className="hero-clock-mobile mono" style={{ fontSize: "0.65rem" }}>
+            <AucklandClock color={tk.textDimmer} />
+          </div>
         </div>
 
         <div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
           <span
-            className="mono"
+            className="mono hero-status"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -186,7 +192,7 @@ export default function Hero({
         </div>
       </div>
 
-      <div ref={scrollHint} style={{ position: "absolute", bottom: 32, right: isMobile ? 24 : 64, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+      <div ref={scrollHint} className="hero-scroll-hint" style={{ position: "absolute", bottom: 32, right: 64, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
         <div className="kicker" style={{ color: tk.textDimmer, fontSize: "0.6rem", writingMode: "vertical-rl" }}>Scroll</div>
         <div style={{ width: 1, height: 40, background: `linear-gradient(to bottom, ${tk.textDim}, transparent)` }} />
       </div>

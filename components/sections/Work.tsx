@@ -153,7 +153,7 @@ export default function Work({ tk, px }: { tk: Theme; px: string }) {
                 <div className="mono" style={{ color: tk.textDimmer, fontSize: "0.68rem", letterSpacing: "0.18em", marginBottom: 12 }}>
                   {pad(i + 1)} / {pad(COUNT)}
                 </div>
-                <h3 className="display" style={{ fontSize: "clamp(2rem, 4vw, 4.2rem)", lineHeight: 0.9, margin: "0 0 16px", color: tk.text }}>
+                <h3 className="display" style={{ fontSize: "clamp(1.85rem, 4vw, 4.2rem)", lineHeight: 0.9, margin: "0 0 16px", color: tk.text }}>
                   {item.title}
                 </h3>
                 <ProjectMeta item={item} tk={tk} />
