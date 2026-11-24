@@ -39,7 +39,6 @@ export default function Nav({
   const router = useRouter();
   const atHome = pathname === "/";
   const atPlay = pathname.startsWith("/playground");
-  const atWorkPage = pathname.startsWith("/work");
   const [active, setActive] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -199,9 +198,9 @@ export default function Nav({
                 <button
                   key={item}
                   type="button"
-                  className={`nav-link${active === id || (id === "work" && atWorkPage) ? " is-active" : ""}`}
+                  className={`nav-link${active === id ? " is-active" : ""}`}
                   onClick={() => go(id)}
-                  style={{ color: active === id || (id === "work" && atWorkPage) ? tk.accent : tk.textDimmer }}
+                  style={{ color: active === id ? tk.accent : tk.textDimmer }}
                 >
                   {item}
                 </button>
@@ -354,12 +353,12 @@ export default function Nav({
 
             <div className="site-menu-cards">
               {featured.map((item) => (
-                <Link
+                <button
                   key={item.slug}
-                  href={`/work/${item.slug}`}
-                  onClick={() => setMenuOpen(false)}
+                  type="button"
+                  onClick={() => go("work")}
                   className="site-menu-card hoverable"
-                  style={{ borderColor: tk.border, color: tk.text }}
+                  style={{ borderColor: tk.border, color: tk.text, textAlign: "left", width: "100%" }}
                 >
                   <LogoPlate
                     src={item.logo}
@@ -369,12 +368,12 @@ export default function Nav({
                     style={{ height: isMobile ? 140 : 180 }}
                   />
                   <div className="site-menu-card-copy">
-                    <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 6 }}>Case study</div>
+                    <div className="kicker" style={{ color: tk.textDimmer, marginBottom: 6 }}>Selected work</div>
                     <div className="display" style={{ fontSize: "clamp(1.6rem, 2.4vw, 2.4rem)", lineHeight: 0.95 }}>
                       {item.title}
                     </div>
                   </div>
-                </Link>
+                </button>
               ))}
             </div>
           </div>

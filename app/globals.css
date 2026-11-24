@@ -812,6 +812,10 @@ button.work-orbit-card {
   overflow: hidden;
   border: 1px solid currentColor;
   text-decoration: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
   will-change: transform, opacity;
 }
 

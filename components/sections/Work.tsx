@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { projects, type Project } from "@/lib/content";
 import { motionConfig } from "@/lib/motion";
@@ -30,19 +29,7 @@ function ProjectMeta({ item, tk }: { item: Project; tk: Theme }) {
           <span key={t} className="tech-chip">{t}</span>
         ))}
       </div>
-      <p style={{ color: tk.text, fontSize: "0.82rem", lineHeight: 1.6, margin: "0 0 14px" }}>{item.result}</p>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-        {item.liveUrl ? (
-          <a className="btn btn-ghost hoverable" href={item.liveUrl} target="_blank" rel="noopener noreferrer" style={{ padding: "10px 14px", color: tk.accent, borderColor: tk.accent }}>
-            Live site
-          </a>
-        ) : null}
-        {item.featured && item.caseStudy ? (
-          <Link className="btn btn-ghost hoverable" href={`/work/${item.slug}`} style={{ padding: "10px 14px", color: tk.accent, borderColor: tk.accent }}>
-            Case study
-          </Link>
-        ) : null}
-      </div>
+      <p style={{ color: tk.text, fontSize: "0.82rem", lineHeight: 1.6, margin: 0 }}>{item.result}</p>
     </div>
   );
 }
